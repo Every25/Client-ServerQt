@@ -1,66 +1,106 @@
-#include "Server.h"
+п»ї#include "Server.h"
 
 Server::Server(QObject* parent) :
-	QTcpServer(parent)
+    QTcpServer(parent)
 {
-	if (listen(QHostAddress::Any, 8080)) {
-		qDebug() << "Listening...";
-	}
-	else {
-		qDebug() << "Error while starting: " << errorString();
-	}
+    if (listen(QHostAddress::Any, 8080)) {
+        qDebug() << "Listening...";
+    }
+    else {
+        qDebug() << "Error while starting: " << errorString();
+    }
 }
 
 void Server::incomingConnection(qintptr handle)
 {
-	QTcpSocket* socket = new QTcpSocket();
-	socket->setSocketDescriptor(handle);
+    QTcpSocket* socket = new QTcpSocket();
+    socket->setSocketDescriptor(handle);
 
-	// Выводим информацию о новом подключении
-	qDebug() << "New client connected from:" << socket->peerAddress().toString();
+    connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+}
 
-	connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-	connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+QString Server::getDirectoryListing(const QString& path)
+{
+    QDir dir(path);
+    if (!dir.exists()) {
+        return "{\"error\":\"Directory not found\"}";
+    }
+
+    nlohmann::json j;
+    j["files"] = nlohmann::json::array();
+
+    QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
+    for (const QFileInfo& fileInfo : list) {
+        j["files"].push_back(fileInfo.fileName().toStdString());
+    }
+
+    return QString::fromStdString(j.dump());
 }
 
 void Server::onReadyRead()
 {
-	QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
-	if (!socket)
-		return;
+    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
+    if (!socket)
+        return;
 
-	QByteArray requestData = socket->readAll();
-	qDebug() << "Received request:" << requestData;
+    QByteArray requestData = socket->readAll();
+    qDebug() << "Received request:" << requestData;
 
-	QFile file("./files/test.txt");
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		qDebug() << "Failed to open file";
-		// Можно отправить ошибку клиенту
-		QString response = "HTTP/1.1 500 Internal Server Error\r\n\r\nFailed to open file.";
-		socket->write(response.toLatin1());
-		socket->disconnectFromHost();
-		return;
-	}
+    // РћРїСЂРµРґРµР»СЏРµРј РїСѓС‚СЊ РёР· Р·Р°РїСЂРѕСЃР° 
+    QString path = "./files"; // Р‘Р°Р·РѕРІР°СЏ РґРёСЂРµРєС‚РѕСЂРёСЏ
+    QString request = QString(requestData);
+    if (request.startsWith("GET /")) {
+        int start = request.indexOf("GET /") + 5;
+        int end = request.indexOf(" ", start);
+        if (end > start) {
+            QString requestedPath = request.mid(start, end - start);
+            path += "/" + requestedPath;
+        }
+    }
 
-	QByteArray fileContent = file.readAll();
-	file.close();
+    QFileInfo fileInfo(path);
+    QString response;
 
-	QString responseHeader = "HTTP/1.1 200 OK\r\n"
-		"Content-Type: text/plain\r\n"
-		"Content-Length: %1\r\n"
-		"\r\n";
+    if (fileInfo.isDir()) {
+        QString directoryContent = getDirectoryListing(path);
+        response = "HTTP/1.1 200 OK\r\n"
+            "Content-Type: application/json\r\n"
+            "Content-Length: " + QString::number(directoryContent.size()) + "\r\n"
+            "\r\n" + directoryContent;
+    }
 
-	QString response = responseHeader.arg(fileContent.size());
-	socket->write(response.toLatin1());       // Отправляем заголовки
-	socket->write(fileContent);               // Отправляем содержимое файла
-	socket->disconnectFromHost();
+    else if (fileInfo.isFile()) {
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly)) {
+            response = "HTTP/1.1 500 Internal Server Error\r\n\r\nFailed to open file.";
+        }
+        else {
+            QByteArray fileContent = file.readAll();
+            file.close();
+            response = "HTTP/1.1 200 OK\r\n"
+                "Content-Type: application/octet-stream\r\n"
+                "Content-Length: " + QString::number(fileContent.size()) + "\r\n"
+                "\r\n";
+            socket->write(response.toLatin1());
+            socket->write(fileContent);
+            socket->disconnectFromHost();
+            return;
+        }
+    }
+    else {
+        response = "HTTP/1.1 404 Not Found\r\n\r\nResource not found.";
+    }
+
+    socket->write(response.toLatin1());
+    socket->disconnectFromHost();
 }
 
 void Server::onDisconnected()
 {
-	QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
-	if (socket) {
-		qDebug() << "Client disconnected:" << socket->peerAddress().toString();
-		socket->deleteLater();
-	}
+    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
+    if (socket) {
+        qDebug() << "Client disconnected:" << socket->peerAddress().toString();
+        socket->deleteLater();
+    }
 }
