@@ -1,11 +1,12 @@
-#include "ClientQt.h"
+﻿#include "LibrariesWidget.h"
+#include "Client.h"
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    ClientQt window;
-    window.setWindowTitle("Client");
+    LibrariesWidget window;
+    window.setWindowTitle(QStringLiteral(u"Библиотеки"));
     window.show();
     return app.exec();
 }

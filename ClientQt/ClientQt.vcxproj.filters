@@ -29,7 +29,7 @@
     <QtUic Include="ClientQt.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtMoc Include="ClientQt.h">
+    <QtMoc Include="Client.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -37,8 +37,16 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ClientQt.cpp">
+    <ClCompile Include="Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LibrariesWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="LibrariesWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

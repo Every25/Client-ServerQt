@@ -66,6 +66,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\vcpkg\installed\x64-windows\include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
@@ -99,9 +100,13 @@
   <ItemGroup>
     <QtRcc Include="ClientQt.qrc" />
     <QtUic Include="ClientQt.ui" />
-    <QtMoc Include="ClientQt.h" />
-    <ClCompile Include="ClientQt.cpp" />
+    <QtMoc Include="Client.h" />
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="LibrariesWidget.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="LibrariesWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -16,6 +16,9 @@ void Server::incomingConnection(qintptr handle)
 	QTcpSocket* socket = new QTcpSocket();
 	socket->setSocketDescriptor(handle);
 
+	// Выводим информацию о новом подключении
+	qDebug() << "New client connected from:" << socket->peerAddress().toString();
+
 	connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 	connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 }
