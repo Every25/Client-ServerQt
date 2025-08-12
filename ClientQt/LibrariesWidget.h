@@ -2,9 +2,9 @@
 #include "Client.h"
 
 #include <QWidget>
-#include <QVBoxLayout>
 #include <QListView>
 #include <QStringListModel>
+#include <QKeyEvent>
 
 class QTextEdit;
 
@@ -21,7 +21,11 @@ private:
     QStringListModel* model;
     Client* client;
 
+protected:
+    bool eventFilter(QObject* obj, QEvent* event) override;
+
 public slots:
     void updateList(const QStringList& items);
     void handleError(const QString& errorString);
+    void RequestWithSelectedItem();
 };

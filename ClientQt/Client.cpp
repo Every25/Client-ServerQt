@@ -1,9 +1,7 @@
 ﻿#include "Client.h"
 
 #include <nlohmann/json.hpp>
-#include <QString>
 #include <QByteArray>
-#include <string>
 
 using json = nlohmann::json;
 
@@ -15,9 +13,17 @@ Client::Client(QObject* parent) : QObject(parent) {
 Client::~Client()
 {}
 
-void Client::sendRequest(const QUrl& url) {
+void Client::sendRequest(QUrl url) {
     QNetworkRequest request(url);
-    manager->get(request);
+    QUrlQuery query;
+
+    if (!parameter.isEmpty()) {
+        query.addQueryItem("name", parameter);
+    }
+
+    url.setQuery(query.toString());
+    manager->get(QNetworkRequest(url));
+    parameter = "";
 }
 
 void Client::onFinished(QNetworkReply* reply)
@@ -33,12 +39,7 @@ void Client::onFinished(QNetworkReply* reply)
     QStringList items;
 
     try {
-        std::string json_str = R"({
-        "name": "Ivan",
-        "age": 30,
-        "skills": ["C++", "Python", "JavaScript"]
-    })";
-        // Парсим JSON с помощью nlohmann
+        // Парсинг JSON с помощью nlohmann
         json j = json::parse(responseStr);
 
         if (j["files"].is_array()) {
@@ -64,5 +65,3 @@ void Client::onFinished(QNetworkReply* reply)
     emit dataReceived(items);
     reply->deleteLater();
 }
-
-

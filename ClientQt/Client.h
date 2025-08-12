@@ -1,9 +1,10 @@
 ﻿#pragma once
 
-#include <QTcpServer>
-#include <QTcpSocket>
-#include <QFile>
+#include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QUrlQuery>
+#include <QString>
+
 
 class QTextEdit;
 
@@ -15,7 +16,8 @@ public:
     Client(QObject* parent = nullptr);
     ~Client();
 
-    void sendRequest(const QUrl& url);
+    void sendRequest(QUrl url);
+    QString parameter;
 
 signals:
     void dataReceived(const QStringList& items);
@@ -23,7 +25,6 @@ signals:
 
 private:
     QNetworkAccessManager* manager;
-    //QTcpSocket* socket;
 
 public slots:
     void onFinished(QNetworkReply* reply);
