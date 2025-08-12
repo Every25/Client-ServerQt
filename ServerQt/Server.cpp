@@ -1,7 +1,7 @@
 ﻿#include "Server.h"
 
 Server::Server(QObject* parent) :
-    QTcpServer(parent)
+    QTcpServer(parent), currentPath("./files")
 {
     if (listen(QHostAddress::Any, 8080)) {
         qDebug() << "Listening...";
@@ -47,15 +47,39 @@ void Server::onReadyRead()
     QByteArray requestData = socket->readAll();
     qDebug() << "Received request:" << requestData;
 
-    // Определяем путь из запроса 
-    QString path = "./files"; // Базовая директория
     QString request = QString(requestData);
+    QString path = currentPath; // Используем текущий путь
+
+    // Обработка GET запроса с параметрами
     if (request.startsWith("GET /")) {
         int start = request.indexOf("GET /") + 5;
-        int end = request.indexOf(" ", start);
+        int end = request.indexOf(" HTTP/", start);
         if (end > start) {
             QString requestedPath = request.mid(start, end - start);
-            path += "/" + requestedPath;
+
+            // Проверяем, есть ли параметры в URL
+            int paramStart = requestedPath.indexOf('?');
+            if (paramStart != -1) {
+                QString params = requestedPath.mid(paramStart + 1);
+                requestedPath = requestedPath.left(paramStart);
+
+                // Разбираем параметры
+                QUrlQuery query(params);
+                if (query.hasQueryItem("name")) {
+                    QString folderName = query.queryItemValue("name");
+                     // Добавляем новую папку к текущему пути
+                    path = currentPath + "/" + folderName;
+                    QDir dir(path);
+                    if (dir.exists()) {
+                        currentPath = path; // Обновляем текущий путь
+                    }
+                }
+            }
+            else {
+                // Запрос без параметров - сброс к корневой папке
+                currentPath = basePath;
+                path = currentPath;
+            }
         }
     }
 
@@ -69,7 +93,6 @@ void Server::onReadyRead()
             "Content-Length: " + QString::number(directoryContent.size()) + "\r\n"
             "\r\n" + directoryContent;
     }
-
     else if (fileInfo.isFile()) {
         QFile file(path);
         if (!file.open(QIODevice::ReadOnly)) {

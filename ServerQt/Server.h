@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFileInfoList>
+#include <QUrlQuery>
 #include <nlohmann/json.hpp>
 
 
@@ -20,7 +21,9 @@ public:
 
     QString getDirectoryListing(const QString& path);
 
-signals:
+private:
+    QString currentPath; // Текущий путь
+    const QString basePath = "./files"; // Базовая директория
 
 public slots:
     void onReadyRead();
