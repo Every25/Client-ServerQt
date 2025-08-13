@@ -48,7 +48,7 @@ void Server::onReadyRead()
     qDebug() << "Received request:" << requestData;
 
     QString request = QString(requestData);
-    QString path = currentPath; // Используем текущий путь
+    QString path = currentPath;
 
     // Обработка GET запроса с параметрами
     if (request.startsWith("GET /")) {
@@ -71,14 +71,24 @@ void Server::onReadyRead()
                     path = currentPath + "/" + folderName;
                     QDir dir(path);
                     if (dir.exists()) {
-                        currentPath = path; // Обновляем текущий путь
+                        currentPath = path;
                     }
                 }
-            }
-            else {
-                // Запрос без параметров - сброс к корневой папке
-                currentPath = basePath;
-                path = currentPath;
+                else if (query.hasQueryItem("level")) {
+                    QString folderName = query.queryItemValue("level");
+                    if (folderName == "back") {
+                        // Поднимаемся на уровень выше
+                        QDir dir(currentPath);
+                        dir.cdUp();
+                        currentPath = dir.path();
+                        path = currentPath;
+                    }
+                    else if (folderName == "home") {
+                        // Сброс к корневой папке
+                        currentPath = basePath;
+                        path = currentPath;
+                    }
+                }
             }
         }
     }
