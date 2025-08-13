@@ -43,9 +43,7 @@ void HttpRequestHandler::handleRequest()
 
                 sendJsonResponse(socket, jsonResponse);
             }
-            //else if (fileInfo.isFile()) {
-            //    sendFileResponse(socket, currentPath);
-            //}
+
             else {
                 sendResponse(socket, "404 Not Found", "Resource not found");
             }
@@ -79,27 +77,12 @@ void HttpRequestHandler::processGetRequest(const QString& request)
 
 void HttpRequestHandler::handlePathChange(const QUrlQuery& query)
 {
-    if (query.hasQueryItem("name")) {
-        QString folderName = query.queryItemValue("name");
-        QString newPath = currentPath + "/" + folderName;
+    if (query.hasQueryItem("path")) {
+        QString folderName = query.queryItemValue("path");
+        QString newPath = "./" + folderName;
 
         if (QDir(newPath).exists()) {
             currentPath = newPath;
-        }
-    }
-    else if (query.hasQueryItem("level")) {
-        QString level = query.queryItemValue("level");
-
-        if (level == "back") {
-            QDir dir(currentPath);
-            if (dir != basePath) {
-                if (dir.cdUp()) {
-                    currentPath = dir.path();
-                }
-            }
-        }
-        else if (level == "home") {
-            currentPath = basePath;
         }
     }
 }
