@@ -18,8 +18,7 @@ public:
 
     void sendRequest();
     QUrl url;
-    QString key;
-    QString parameter;
+    QString currentPath = "/home";
     QUrlQuery query;
 
 signals:

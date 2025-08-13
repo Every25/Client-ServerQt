@@ -5,8 +5,8 @@
 #include <QString>
 #include <QMessageBox>
 
-QString ip = "127.0.0.1";
-//QString ip = "10.0.1.118";
+//QString ip = "127.0.0.1";
+QString ip = "10.0.1.118";
 int port = 8080;
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
@@ -18,21 +18,22 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     listView = new QListView();
     model = new QStringListModel();
     listView->setModel(model);
-    mainLayout->addWidget(listView);
+    listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     listView->installEventFilter(this);
 
-    backButton = new QPushButton(QStringLiteral(u"Назад"), this);
-    forwardButton = new QPushButton(QStringLiteral(u"Вперед"), this);
-    homeButton = new QPushButton(QStringLiteral(u"На главную"), this);
-    backButton->setVisible(false);
-    forwardButton->setVisible(false);
-    homeButton->setVisible(false);
+    homeButton = new QPushButton(QIcon("icons/home.svg"), "", this);
+    backButton = new QPushButton(QIcon("icons/back.svg"), "", this);
+    forwardButton = new QPushButton(QIcon("icons/forward.svg"), "", this);
+    homeButton->setEnabled(false);
+    backButton->setEnabled(false);
+    forwardButton->setEnabled(false);
+    buttonLayout->addWidget(homeButton);
     buttonLayout->addWidget(backButton);
     buttonLayout->addWidget(forwardButton);
-    buttonLayout->addWidget(homeButton);
     
 
     mainLayout->addLayout(buttonLayout);
+    mainLayout->addWidget(listView);
     setLayout(mainLayout);
     
     // Создаем клиента
@@ -83,33 +84,45 @@ void LibrariesWidget::RequestWithSelectedItem()
         return;
     }
     QString selectedItem = model->data(index, Qt::DisplayRole).toString();
-    client->key = "name";
-    client->parameter = selectedItem;
+    client->currentPath += "/" + selectedItem;
 
     client->sendRequest();
+    if (client->currentPath != "/home")
+    {
+        homeButton->setEnabled(true);
+        backButton->setEnabled(true);
+    }
+    else
+    {
+        backButton->setEnabled(false);
+    }
+    //forwardButton->setEnabled(true); 
+}
 
-    backButton->setVisible(true);
-    forwardButton->setVisible(true);
-    homeButton->setVisible(true);
+void LibrariesWidget::homeButtonClicked()
+{
+    client->currentPath = "/home";
+    client->sendRequest();
+    homeButton->setEnabled(false);
+    backButton->setEnabled(false);
 }
 
 void LibrariesWidget::backButtonClicked()
 {
-    client->key = "level";
-    client->parameter = "back";
+    if (client->currentPath != "/") {
+        int lastSlashIndex = client->currentPath.lastIndexOf('/', client->currentPath.length() - 2);
+        if (lastSlashIndex == -1) {
+            client->currentPath = "/";
+        }
+        else {
+            client->currentPath = client->currentPath.left(lastSlashIndex);
+        }
+        client->sendRequest();
+    }
     client->sendRequest();
 }
 
 void LibrariesWidget::forwardButtonClicked()
 {
-    client->key = "level";
-    client->parameter = "forward";
-    client->sendRequest();
-}
-
-void LibrariesWidget::homeButtonClicked()
-{
-    client->key = "level";
-    client->parameter = "home";
-    client->sendRequest();
+   //
 }

@@ -21,9 +21,9 @@ private:
     QListView* listView;
     QStringListModel* model;
     Client* client;
+    QPushButton* homeButton;
     QPushButton* backButton;
     QPushButton* forwardButton;
-    QPushButton* homeButton;
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
@@ -32,7 +32,7 @@ public slots:
     void updateList(const QStringList& items);
     void handleError(const QString& errorString);
     void RequestWithSelectedItem();
+    void homeButtonClicked();
     void backButtonClicked();
     void forwardButtonClicked();
-    void homeButtonClicked();
 };

@@ -15,8 +15,8 @@ Client::~Client()
 
 void Client::sendRequest() {
 
-    if (!key.isEmpty() && !parameter.isEmpty()) {
-        query.addQueryItem(key, parameter);
+    if (!currentPath.isEmpty()) {
+        query.addQueryItem("path", currentPath);
     }
     url.setQuery(query.toString());
     manager->get(QNetworkRequest(url));
@@ -25,7 +25,9 @@ void Client::sendRequest() {
 
 void Client::onFinished(QNetworkReply* reply)
 {
-    if (reply->error() != QNetworkReply::NoError) {
+    if (reply->error() != QNetworkReply::NoError ||
+        (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).isValid() &&
+            reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() >= 400)) {
         emit errorOccurred(reply->errorString());
         reply->deleteLater();
         return;
