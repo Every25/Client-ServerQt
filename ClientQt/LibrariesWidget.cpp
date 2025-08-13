@@ -1,7 +1,7 @@
 ﻿#include "LibrariesWidget.h"
 
 #include <QVBoxLayout>
-#include <QPushButton>
+#include <QHBoxLayout>
 #include <QString>
 #include <QMessageBox>
 
@@ -12,23 +12,41 @@ int port = 8080;
 LibrariesWidget::LibrariesWidget(QWidget* parent)
     : QWidget(parent)
 {
-    auto layout = new QVBoxLayout(this);
+    auto mainLayout = new QVBoxLayout(this);
+    auto buttonLayout = new QHBoxLayout(this);
 
     listView = new QListView();
     model = new QStringListModel();
     listView->setModel(model);
-    layout->addWidget(listView);
+    mainLayout->addWidget(listView);
     listView->installEventFilter(this);
 
-    setLayout(layout);
+    backButton = new QPushButton(QStringLiteral(u"Назад"), this);
+    forwardButton = new QPushButton(QStringLiteral(u"Вперед"), this);
+    homeButton = new QPushButton(QStringLiteral(u"На главную"), this);
+    backButton->setVisible(false);
+    forwardButton->setVisible(false);
+    homeButton->setVisible(false);
+    buttonLayout->addWidget(backButton);
+    buttonLayout->addWidget(forwardButton);
+    buttonLayout->addWidget(homeButton);
+    
+
+    mainLayout->addLayout(buttonLayout);
+    setLayout(mainLayout);
     
     // Создаем клиента
     client = new Client(this);
+    client->url = QUrl("http://" + ip + ":" + QString::number(port));
 
     connect(client, &Client::dataReceived, this, &LibrariesWidget::updateList);
     connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
-    client->sendRequest(QUrl("http://" + ip + ":" + QString::number(port)));
+    connect(backButton, &QPushButton::clicked, this, &LibrariesWidget::backButtonClicked);
+    connect(forwardButton, &QPushButton::clicked, this, &LibrariesWidget::forwardButtonClicked);
+    connect(homeButton, &QPushButton::clicked, this, &LibrariesWidget::homeButtonClicked);
+
+    client->sendRequest();
 }
 
 LibrariesWidget::~LibrariesWidget()
@@ -65,7 +83,33 @@ void LibrariesWidget::RequestWithSelectedItem()
         return;
     }
     QString selectedItem = model->data(index, Qt::DisplayRole).toString();
+    client->key = "name";
     client->parameter = selectedItem;
 
-    client->sendRequest(QUrl("http://" + ip + ":" + QString::number(port)));
+    client->sendRequest();
+
+    backButton->setVisible(true);
+    forwardButton->setVisible(true);
+    homeButton->setVisible(true);
+}
+
+void LibrariesWidget::backButtonClicked()
+{
+    client->key = "level";
+    client->parameter = "back";
+    client->sendRequest();
+}
+
+void LibrariesWidget::forwardButtonClicked()
+{
+    client->key = "level";
+    client->parameter = "forward";
+    client->sendRequest();
+}
+
+void LibrariesWidget::homeButtonClicked()
+{
+    client->key = "level";
+    client->parameter = "home";
+    client->sendRequest();
 }

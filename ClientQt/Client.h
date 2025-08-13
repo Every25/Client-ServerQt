@@ -16,8 +16,11 @@ public:
     Client(QObject* parent = nullptr);
     ~Client();
 
-    void sendRequest(QUrl url);
+    void sendRequest();
+    QUrl url;
+    QString key;
     QString parameter;
+    QUrlQuery query;
 
 signals:
     void dataReceived(const QStringList& items);

@@ -13,17 +13,14 @@ Client::Client(QObject* parent) : QObject(parent) {
 Client::~Client()
 {}
 
-void Client::sendRequest(QUrl url) {
-    QNetworkRequest request(url);
-    QUrlQuery query;
+void Client::sendRequest() {
 
-    if (!parameter.isEmpty()) {
-        query.addQueryItem("name", parameter);
+    if (!key.isEmpty() && !parameter.isEmpty()) {
+        query.addQueryItem(key, parameter);
     }
-
     url.setQuery(query.toString());
     manager->get(QNetworkRequest(url));
-    parameter = "";
+    query.clear();
 }
 
 void Client::onFinished(QNetworkReply* reply)

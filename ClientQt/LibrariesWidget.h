@@ -5,6 +5,7 @@
 #include <QListView>
 #include <QStringListModel>
 #include <QKeyEvent>
+#include <QPushButton>
 
 class QTextEdit;
 
@@ -20,6 +21,9 @@ private:
     QListView* listView;
     QStringListModel* model;
     Client* client;
+    QPushButton* backButton;
+    QPushButton* forwardButton;
+    QPushButton* homeButton;
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
@@ -28,4 +32,7 @@ public slots:
     void updateList(const QStringList& items);
     void handleError(const QString& errorString);
     void RequestWithSelectedItem();
+    void backButtonClicked();
+    void forwardButtonClicked();
+    void homeButtonClicked();
 };
