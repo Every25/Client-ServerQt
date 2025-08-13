@@ -1,31 +1,27 @@
 ﻿#pragma once
+
 #include <QTcpServer>
 #include <QTcpSocket>
-#include <QDebug>
-#include <QDateTime> 
-#include <QFile>
 #include <QDir>
-#include <QFileInfo>
-#include <QFileInfoList>
-#include <QUrlQuery>
-#include <nlohmann/json.hpp>
+#include <memory>
 
+class HttpRequestHandler;
 
 class Server : public QTcpServer
 {
     Q_OBJECT
+
 public:
-    explicit Server(QObject* parent = 0);
+    explicit Server(QObject* parent = nullptr);
+    ~Server() override;
 
-    void incomingConnection(qintptr handle);
-
-    QString getDirectoryListing(const QString& path);
+protected:
+    void incomingConnection(qintptr handle) override;
 
 private:
-    QString currentPath; // Текущий путь
-    const QString basePath = "./files"; // Базовая директория
+    const QString basePath = "./files";
+    HttpRequestHandler* requestHandler;
 
-public slots:
-    void onReadyRead();
-    void onDisconnected();
+private slots:
+    void onClientDisconnected();
 };

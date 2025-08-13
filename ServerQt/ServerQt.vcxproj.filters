@@ -29,9 +29,15 @@
     <ClCompile Include="Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HttpRequestHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Server.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="HttpRequestHandler.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

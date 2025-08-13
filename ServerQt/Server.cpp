@@ -1,139 +1,43 @@
 ﻿#include "Server.h"
+#include "HttpRequestHandler.h"
+#include <QDebug>
 
 Server::Server(QObject* parent) :
-    QTcpServer(parent), currentPath("./files")
+    QTcpServer(parent),
+    requestHandler(new HttpRequestHandler(basePath, this))
 {
     if (listen(QHostAddress::Any, 8080)) {
-        qDebug() << "Listening...";
+        qDebug() << "Server listening on port 8080";
     }
     else {
-        qDebug() << "Error while starting: " << errorString();
+        qCritical() << "Failed to start server:" << errorString();
     }
+}
+
+Server::~Server()
+{
 }
 
 void Server::incomingConnection(qintptr handle)
 {
-    QTcpSocket* socket = new QTcpSocket();
-    socket->setSocketDescriptor(handle);
-
-    connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
-}
-
-QString Server::getDirectoryListing(const QString& path)
-{
-    QDir dir(path);
-    if (!dir.exists()) {
-        return "{\"error\":\"Directory not found\"}";
-    }
-
-    nlohmann::json j;
-    j["files"] = nlohmann::json::array();
-
-    QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
-    for (const QFileInfo& fileInfo : list) {
-        j["files"].push_back(fileInfo.fileName().toStdString());
-    }
-
-    return QString::fromStdString(j.dump());
-}
-
-void Server::onReadyRead()
-{
-    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
-    if (!socket)
+    QTcpSocket* clientSocket = new QTcpSocket(this);
+    if (!clientSocket->setSocketDescriptor(handle)) {
+        qWarning() << "Failed to set socket descriptor:" << clientSocket->errorString();
+        delete clientSocket;
         return;
-
-    QByteArray requestData = socket->readAll();
-    qDebug() << "Received request:" << requestData;
-
-    QString request = QString(requestData);
-    QString path = currentPath;
-
-    // Обработка GET запроса с параметрами
-    if (request.startsWith("GET /")) {
-        int start = request.indexOf("GET /") + 5;
-        int end = request.indexOf(" HTTP/", start);
-        if (end > start) {
-            QString requestedPath = request.mid(start, end - start);
-
-            // Проверяем, есть ли параметры в URL
-            int paramStart = requestedPath.indexOf('?');
-            if (paramStart != -1) {
-                QString params = requestedPath.mid(paramStart + 1);
-                requestedPath = requestedPath.left(paramStart);
-
-                // Разбираем параметры
-                QUrlQuery query(params);
-                if (query.hasQueryItem("name")) {
-                    QString folderName = query.queryItemValue("name");
-                     // Добавляем новую папку к текущему пути
-                    path = currentPath + "/" + folderName;
-                    QDir dir(path);
-                    if (dir.exists()) {
-                        currentPath = path;
-                    }
-                }
-                else if (query.hasQueryItem("level")) {
-                    QString folderName = query.queryItemValue("level");
-                    if (folderName == "back") {
-                        // Поднимаемся на уровень выше
-                        QDir dir(currentPath);
-                        dir.cdUp();
-                        currentPath = dir.path();
-                        path = currentPath;
-                    }
-                    else if (folderName == "home") {
-                        // Сброс к корневой папке
-                        currentPath = basePath;
-                        path = currentPath;
-                    }
-                }
-            }
-        }
     }
 
-    QFileInfo fileInfo(path);
-    QString response;
+    connect(clientSocket, &QTcpSocket::readyRead, requestHandler, &HttpRequestHandler::handleRequest);
+    connect(clientSocket, &QTcpSocket::disconnected, this, &Server::onClientDisconnected);
+    connect(clientSocket, &QTcpSocket::disconnected, clientSocket, &QTcpSocket::deleteLater);
 
-    if (fileInfo.isDir()) {
-        QString directoryContent = getDirectoryListing(path);
-        response = "HTTP/1.1 200 OK\r\n"
-            "Content-Type: application/json\r\n"
-            "Content-Length: " + QString::number(directoryContent.size()) + "\r\n"
-            "\r\n" + directoryContent;
-    }
-    else if (fileInfo.isFile()) {
-        QFile file(path);
-        if (!file.open(QIODevice::ReadOnly)) {
-            response = "HTTP/1.1 500 Internal Server Error\r\n\r\nFailed to open file.";
-        }
-        else {
-            QByteArray fileContent = file.readAll();
-            file.close();
-            response = "HTTP/1.1 200 OK\r\n"
-                "Content-Type: application/octet-stream\r\n"
-                "Content-Length: " + QString::number(fileContent.size()) + "\r\n"
-                "\r\n";
-            socket->write(response.toLatin1());
-            socket->write(fileContent);
-            socket->disconnectFromHost();
-            return;
-        }
-    }
-    else {
-        response = "HTTP/1.1 404 Not Found\r\n\r\nResource not found.";
-    }
-
-    socket->write(response.toLatin1());
-    socket->disconnectFromHost();
+    qDebug() << "New connection from:" << clientSocket->peerAddress().toString();
 }
 
-void Server::onDisconnected()
+void Server::onClientDisconnected()
 {
-    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
-    if (socket) {
-        qDebug() << "Client disconnected:" << socket->peerAddress().toString();
-        socket->deleteLater();
+    QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+    if (clientSocket) {
+        qDebug() << "Client disconnected:" << clientSocket->peerAddress().toString();
     }
 }
