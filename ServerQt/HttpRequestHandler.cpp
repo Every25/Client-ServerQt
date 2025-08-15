@@ -18,6 +18,8 @@ HttpRequestHandler::HttpRequestHandler(const QString& basePath, QObject* parent)
 
 void HttpRequestHandler::handleRequest()
 {
+    std::vector<std::string> files;
+    std::vector<std::string> folders;
     QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
     if (!socket || !socket->bytesAvailable()) {
         return;
@@ -38,7 +40,21 @@ void HttpRequestHandler::handleRequest()
                 QDir dir(currentPath);
                 QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
                 for (const QFileInfo& fileInfo : list) {
-                    jsonResponse["files"].push_back(fileInfo.fileName().toStdString());
+                    if (fileInfo.fileName().contains(".")) {
+                        files.push_back(fileInfo.fileName().toStdString());
+                    }
+                    else {
+                        folders.push_back(fileInfo.fileName().toStdString());
+                    }
+                }
+                sort(folders.begin(), folders.end());
+                sort(files.begin(), files.end());
+
+                for (const auto& folder : folders) {
+                    jsonResponse["files"].push_back(folder);
+                }
+                for (const auto& file : files) {
+                    jsonResponse["files"].push_back(file);
                 }
 
                 sendJsonResponse(socket, jsonResponse);
@@ -81,6 +97,7 @@ void HttpRequestHandler::handlePathChange(const QUrlQuery& query)
         QString folderName = query.queryItemValue("path");
         QString newPath = "./" + folderName;
 
+        
         if (QDir(newPath).exists()) {
             currentPath = newPath;
         }
