@@ -95,9 +95,11 @@ void HttpRequestHandler::handlePathChange(const QUrlQuery& query)
 {
     if (query.hasQueryItem("path")) {
         QString folderName = query.queryItemValue("path");
+        if (folderName == "") {
+            folderName = basePath;
+        }
         QString newPath = "./" + folderName;
 
-        
         if (QDir(newPath).exists()) {
             currentPath = newPath;
         }
