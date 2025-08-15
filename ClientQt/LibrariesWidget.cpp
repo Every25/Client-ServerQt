@@ -101,10 +101,10 @@ void LibrariesWidget::handleError(const QString& errorString)
 void LibrariesWidget::RequestWithSelectedItem()
 {
     QModelIndex index = listView->currentIndex();
-    if (!index.isValid()) {
+    QString selectedItem = model->data(index, Qt::DisplayRole).toString();
+    if (!index.isValid() || selectedItem.contains('.')) {
         return;
     }
-    QString selectedItem = model->data(index, Qt::DisplayRole).toString();
 
     backStack->push(client->currentPath);
     forwardStack->clear();
