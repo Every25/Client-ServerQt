@@ -149,14 +149,6 @@ void LibrariesWidget::backButtonClicked()
 
         client->sendRequest();
         UpdateButtons();
-
-        // Если достигли корня, отключаем кнопку назад
-        if (client->currentPath == "/home") {
-            backButton->setEnabled(false);
-        }
-        else {
-            backButton->setEnabled(true);
-        }
     }
 }
 
