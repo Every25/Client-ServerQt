@@ -4,9 +4,12 @@
 #include <QHBoxLayout>
 #include <QString>
 #include <QMessageBox>
+#include <QStandardItem>
+#include <QTreeView>
+#include <QStandardItemModel>
 
-//QString ip = "127.0.0.1";
-QString ip = "10.0.1.118";
+QString ip = "127.0.0.1";
+//QString ip = "10.0.1.118";
 int port = 8080;
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
@@ -15,47 +18,35 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     auto mainLayout = new QVBoxLayout(this);
     auto buttonLayout = new QHBoxLayout(this);
 
-    listView = new QListView();
+    treeView = new QTreeView(this);
     model = new QStandardItemModel(this);
-    listView->setModel(model);
-    listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    listView->installEventFilter(this);
+    root = model->invisibleRootItem();
+    treeView->setModel(model);
+    treeView->setHeaderHidden(true);
+    treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    treeView->installEventFilter(this);
 
     //создание и добавление кнопок
     refreshButton = new QPushButton(QIcon("icons/refresh.svg"), "", this);
-    homeButton = new QPushButton(QIcon("icons/home.svg"), "", this);
-    backButton = new QPushButton(QIcon("icons/back.svg"), "", this);
-    forwardButton = new QPushButton(QIcon("icons/forward.svg"), "", this);
-    homeButton->setEnabled(false);
-    backButton->setEnabled(false);
-    forwardButton->setEnabled(false);
     buttonLayout->addWidget(refreshButton);
-    buttonLayout->addWidget(homeButton);
-    buttonLayout->addWidget(backButton);
-    buttonLayout->addWidget(forwardButton);
     
 
     mainLayout->addLayout(buttonLayout);
-    mainLayout->addWidget(listView);
+    mainLayout->addWidget(treeView);
     setLayout(mainLayout);
     
     // Создание клиента
     client = new Client(this);
     client->url = QUrl("http://" + ip + ":" + QString::number(port));
 
-    backStack = new QStack<QString>();
-    forwardStack = new QStack<QString>();
-
     //привязка сигналов
-    connect(listView, &QListView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
-    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateList);
+    connect(treeView, &QTreeView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
+    connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
+    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
     connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
     //привязка сигналов для кнопок
     connect(refreshButton, &QPushButton::clicked, this, &LibrariesWidget::refreshButtonClicked);
-    connect(backButton, &QPushButton::clicked, this, &LibrariesWidget::backButtonClicked);
-    connect(forwardButton, &QPushButton::clicked, this, &LibrariesWidget::forwardButtonClicked);
-    connect(homeButton, &QPushButton::clicked, this, &LibrariesWidget::homeButtonClicked);
 
     //первое отправление запроса
     client->sendRequest();
@@ -63,59 +54,89 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
 
 LibrariesWidget::~LibrariesWidget()
 {
-    delete backStack;
-    delete forwardStack;
 }
 
-//Обработка нажатия Enter
-bool LibrariesWidget::eventFilter(QObject* obj, QEvent* event)
+void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
 {
-    if (obj == listView && event->type() == QEvent::KeyPress) {
-        QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-        if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
-            RequestWithSelectedItem();
-            return true;
-        }
-    }
-    return QWidget::eventFilter(obj, event);
-}
-
-void LibrariesWidget::RequestWithSelectedItem()
-{
-    QModelIndex index = listView->currentIndex();
     QString selectedItem = model->data(index, Qt::DisplayRole).toString();
     if (!index.isValid() || selectedItem.contains('.')) {
         return;
     }
 
-    backStack->push(client->currentPath);
-    forwardStack->clear();
+    QStandardItem* item = model->itemFromIndex(index);
+    QString fullPath = "/home" + getFullPath(item);
 
-    client->currentPath += "/" + selectedItem;
-
+    client->currentPath = fullPath;
     client->sendRequest();
-
-    UpdateButtons();
+    currentItem = item;
 }
 
-//Обновление списка в QListview после получения данных с сервера
-void LibrariesWidget::updateList(const QStringList& items) 
+//Обновление QTreeView после получения данных с сервера
+void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
 {
-    model->clear();
-
-    for (const QString& item : items) {
-        QStandardItem* standardItem = new QStandardItem();
-        standardItem->setText(item);
-
-        if (!item.contains('.')) {
-            standardItem->setIcon(QIcon::fromTheme("folder"));
-        }
-        else {
-            standardItem->setIcon(QIcon::fromTheme("text-x-generic"));
-        }
-
-        model->appendRow(standardItem);
+    if (client->currentPath == "/home")
+    {
+        addJsonToModel(jsonData, root);
+        return;
     }
+    addJsonToModel(jsonData, currentItem);
+}
+
+QString LibrariesWidget::getFullPath(QStandardItem* item)
+{
+    QStringList pathComponents;
+    QStandardItem* current = item;
+
+    while (current != nullptr)
+    {
+        QString name = current->text();
+        if (name != " ")
+            pathComponents.prepend(name);
+        current = current->parent();
+    }
+
+    return "/" + pathComponents.join("/");
+}
+
+void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
+{
+
+    if (jsonObj.contains("files") && jsonObj["files"].is_array())
+    {
+        for (const auto& file : jsonObj["files"]) {
+            QString nameStr = QString::fromStdString(file["name"].get<std::string>());
+            QString iconStr = QString::fromStdString(file["icon"].get<std::string>());
+            QString typeStr = QString::fromStdString(file["type"].get<std::string>());
+
+            QIcon icon = convertSvgToIcon(iconStr);
+            QStandardItem* nameItem = new QStandardItem(nameStr);
+            nameItem->setIcon(icon);
+
+            if (typeStr == "directory")
+            {
+                QStandardItem* dummyChild = new QStandardItem(" ");
+                nameItem->appendRow(dummyChild);
+            }
+            parentItem->appendRow(nameItem);
+        }
+    }
+}
+
+
+QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
+{
+    QByteArray svgData = svgString.toUtf8();
+    QSvgRenderer renderer(svgData);
+
+    // Размер иконки
+    int iconSize = 64;
+
+    QPixmap pixmap(iconSize, iconSize);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    renderer.render(&painter);
+
+    return QIcon(pixmap);
 }
 
 void LibrariesWidget::handleError(const QString& errorString)
@@ -126,53 +147,4 @@ void LibrariesWidget::handleError(const QString& errorString)
 void LibrariesWidget::refreshButtonClicked()
 {
     client->sendRequest();
-}
-
-void LibrariesWidget::homeButtonClicked()
-{
-    backStack->clear();
-    forwardStack->clear();
-
-    client->currentPath = "/home";
-    client->sendRequest();
-
-    UpdateButtons();
-}
-
-void LibrariesWidget::backButtonClicked()
-{
-    if (!backStack->isEmpty()) {
-        forwardStack->push(client->currentPath);
-        forwardButton->setEnabled(true);
-
-        client->currentPath = backStack->pop();
-
-        client->sendRequest();
-        UpdateButtons();
-    }
-}
-
-void LibrariesWidget::forwardButtonClicked()
-{
-    if (!forwardStack->isEmpty()) {
-        backStack->push(client->currentPath);
-        backButton->setEnabled(true);
-
-        client->currentPath = forwardStack->pop();
-
-        client->sendRequest();
-        UpdateButtons();
-
-        // Если стек вперёд пуст, отключаем кнопку "Вперёд"
-        if (forwardStack->isEmpty()) {
-            forwardButton->setEnabled(false);
-        }
-    }
-}
-
-void LibrariesWidget::UpdateButtons()
-{
-    backButton->setEnabled(!backStack->isEmpty());
-    forwardButton->setEnabled(!forwardStack->isEmpty());
-    homeButton->setEnabled(client->currentPath != "/home");
 }

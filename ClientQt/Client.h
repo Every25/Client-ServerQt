@@ -4,7 +4,8 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 #include <QString>
-
+#include <QStandardItemModel>
+#include <nlohmann/json.hpp>
 
 class QTextEdit;
 
@@ -22,7 +23,7 @@ public:
     QUrlQuery query;
 
 signals:
-    void dataReceived(const QStringList& items);
+    void dataReceived(const nlohmann::json& jsonData);
     void errorOccurred(const QString& errorString);
 
 private:

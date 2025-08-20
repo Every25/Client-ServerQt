@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     LibrariesWidget window;
-    window.setWindowTitle(QStringLiteral(u"Библиотеки"));
+    window.setWindowTitle(QStringLiteral(u"Библиотеки элементов"));
     window.show();
     return app.exec();
 }

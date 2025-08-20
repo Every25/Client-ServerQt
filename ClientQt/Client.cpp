@@ -1,6 +1,5 @@
 ﻿#include "Client.h"
 
-#include <nlohmann/json.hpp>
 #include <QByteArray>
 
 using json = nlohmann::json;
@@ -35,32 +34,39 @@ void Client::onFinished(QNetworkReply* reply)
 
     QByteArray responseData = reply->readAll();
     std::string responseStr = std::string(responseData);
-    QStringList items;
+    QStandardItem* node = new QStandardItem();
 
     try {
         // Парсинг JSON с помощью nlohmann
         json j = json::parse(responseStr);
-
-        if (j["files"].is_array()) {
-            for (const auto& element : j["files"]) {
-                if (element.is_string()) {
-                    QString item = QString::fromStdString(element.get<std::string>());
-                    items << item;
-                }
-            }
-        }
-        else {
-            emit errorOccurred(QStringLiteral(u"Ответ не является массивом JSON"));
-            reply->deleteLater();
-            return;
-        }
+        emit dataReceived(j);
+        //addJsonToModel(j, node);
     }
     catch (const std::exception& e) {
         emit errorOccurred(QString(QStringLiteral(u"Ошибка парсинга JSON: %1")).arg(e.what()));
         reply->deleteLater();
+        delete node;
         return;
     }
 
-    emit dataReceived(items);
+    //emit dataReceived(node);
     reply->deleteLater();
 }
+
+//// Функция для добавления элементов из JSON
+//void Client::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
+//{
+//    if (jsonObj.contains("files") && jsonObj["files"].is_array())
+//    {
+//        auto files = jsonObj["files"];
+//        for (auto& file : files)
+//        {
+//            QStandardItem* name = new QStandardItem(file["name"].get<std::string>().c_str());
+//            parentItem->appendRow(name);
+//
+//            /*QStandardItem* icon = new QStandardItem(file["icon"].get<std::string>().c_str());
+//            parentItem->appendRow(icon);*/
+//        }
+//    }
+//
+//}

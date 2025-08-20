@@ -2,11 +2,15 @@
 #include "Client.h"
 
 #include <QWidget>
-#include <QListView>
+#include <QTreeView>
 #include <QKeyEvent>
 #include <QPushButton>
 #include <QStack>
 #include <QStandardItemModel>
+#include <nlohmann/json.hpp>
+#include <QSvgRenderer>
+#include <QPixmap>
+#include <QPainter>
 
 class QTextEdit;
 
@@ -19,26 +23,21 @@ public:
     ~LibrariesWidget();
 
 private:
-    QListView* listView;
+    QTreeView* treeView;
     QStandardItemModel* model;
+    QStandardItem* root;
     Client* client;
     QPushButton* refreshButton;
-    QPushButton* homeButton;
-    QPushButton* backButton;
-    QPushButton* forwardButton;
-    QStack<QString>* backStack;
-    QStack<QString>* forwardStack;
-    void UpdateButtons();
+    QStandardItem* currentItem;
+    QStack<QString> pathHistory;
 
-protected:
-    bool eventFilter(QObject* obj, QEvent* event) override;
+    void addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
+    QIcon convertSvgToIcon(QString svgString);
+    QString getFullPath(QStandardItem* item);
 
 public slots:
-    void updateList(const QStringList& items);
+    void updateTree(const nlohmann::json& jsonData);
     void handleError(const QString& errorString);
-    void RequestWithSelectedItem();
+    void RequestWithSelectedItem(const QModelIndex& index);
     void refreshButtonClicked();
-    void homeButtonClicked();
-    void backButtonClicked();
-    void forwardButtonClicked();
 };
