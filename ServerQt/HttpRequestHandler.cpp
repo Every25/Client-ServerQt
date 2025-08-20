@@ -27,7 +27,7 @@ QString HttpRequestHandler::getIcon(const QString& iconName) const
         iconFile.setFileName(iconPath);
         if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             qCritical() << "Failed to open unknown icon file:" << iconPath;
-            return QString(); // или верните какую-то стандартную иконку в виде строки
+            return QString();
         }
     }
 
@@ -37,8 +37,6 @@ QString HttpRequestHandler::getIcon(const QString& iconName) const
 
 void HttpRequestHandler::handleRequest()
 {
-    std::vector<std::string> files;
-    std::vector<std::string> folders;
     QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
     if (!socket || !socket->bytesAvailable()) {
         return;
@@ -52,45 +50,57 @@ void HttpRequestHandler::handleRequest()
             processGetRequest(request);
             QFileInfo fileInfo(currentPath);
 
-            if (fileInfo.isDir()) {
-                nlohmann::json jsonResponse;
-                jsonResponse["files"] = nlohmann::json::array();
+            if (!fileInfo.exists()) {
+                sendResponse(socket, "404 Not Found", "Resource not found");
+                return;
+            }
 
+            if (fileInfo.isDir()) {
                 QDir dir(currentPath);
                 QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
 
+                QList<QFileInfo> directories;
+                QList<QFileInfo> files;
+
                 for (const QFileInfo& fileInfo : list) {
+                    if (fileInfo.isDir()) {
+                        directories.append(fileInfo);
+                    }
+                    else {
+                        files.append(fileInfo);
+                    }
+                }
+
+                auto caseInsensitiveLessThan = [](const QFileInfo& a, const QFileInfo& b) {
+                    return a.fileName().compare(b.fileName(), Qt::CaseInsensitive) < 0;
+                    };
+
+                std::sort(directories.begin(), directories.end(), caseInsensitiveLessThan);
+                std::sort(files.begin(), files.end(), caseInsensitiveLessThan);
+
+                nlohmann::json jsonResponse;
+                jsonResponse["files"] = nlohmann::json::array();
+
+                for (const QFileInfo& fileInfo : directories) {
+                    nlohmann::json fileEntry;
+                    fileEntry["name"] = fileInfo.fileName().toStdString();
+                    fileEntry["icon"] = getIcon("folder").toStdString();
+                    fileEntry["type"] = "directory";
+                    jsonResponse["files"].push_back(fileEntry);
+                }
+
+                for (const QFileInfo& fileInfo : files) {
                     nlohmann::json fileEntry;
 
-                    //QString iconKey = fileInfo.fileName().contains('.')
-                    //    ? fileInfo.fileName().section('.', 0, -2)  // Берем все до последней точки
-                    //    : fileInfo.fileName();                     // Или полное имя, если точки нет
+                    QString iconKey = fileInfo.fileName().section('.', 0, -2);
+
 
                     fileEntry["name"] = fileInfo.fileName().toStdString();
-                    //fileEntry["icon"] = getIcon(iconKey).toStdString();
-
+                    fileEntry["icon"] = getIcon(iconKey).toStdString();
+                    fileEntry["type"] = "file";
 
                     jsonResponse["files"].push_back(fileEntry);
                 }
-                /*QDir dir(currentPath);
-                QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
-                for (const QFileInfo& fileInfo : list) {
-                    if (fileInfo.fileName().contains(".")) {
-                        files.push_back(fileInfo.fileName().toStdString());
-                    }
-                    else {
-                        folders.push_back(fileInfo.fileName().toStdString());
-                    }
-                }
-                sort(folders.begin(), folders.end());
-                sort(files.begin(), files.end());
-
-                for (const auto& folder : folders) {
-                    jsonResponse["files"].push_back(folder);
-                }
-                for (const auto& file : files) {
-                    jsonResponse["files"].push_back(file);
-                }*/
 
                 sendJsonResponse(socket, jsonResponse);
             }
