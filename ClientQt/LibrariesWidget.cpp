@@ -5,8 +5,8 @@
 #include <QString>
 #include <QMessageBox>
 
-//QString ip = "127.0.0.1";
-QString ip = "10.0.1.118";
+QString ip = "127.0.0.1";
+//QString ip = "10.0.1.118";
 int port = 8080;
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)

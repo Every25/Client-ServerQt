@@ -27,7 +27,7 @@ QString HttpRequestHandler::getIcon(const QString& iconName) const
         iconFile.setFileName(iconPath);
         if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             qCritical() << "Failed to open unknown icon file:" << iconPath;
-            return QString(); // или верните какую-то стандартную иконку в виде строки
+            return QString(); 
         }
     }
 
@@ -62,35 +62,16 @@ void HttpRequestHandler::handleRequest()
                 for (const QFileInfo& fileInfo : list) {
                     nlohmann::json fileEntry;
 
-                    //QString iconKey = fileInfo.fileName().contains('.')
-                    //    ? fileInfo.fileName().section('.', 0, -2)  // Берем все до последней точки
-                    //    : fileInfo.fileName();                     // Или полное имя, если точки нет
+                    QString iconKey = fileInfo.fileName().contains('.')
+                        ? fileInfo.fileName().section('.', 0, -2)  
+                        : fileInfo.fileName();                     
 
                     fileEntry["name"] = fileInfo.fileName().toStdString();
-                    //fileEntry["icon"] = getIcon(iconKey).toStdString();
+                    fileEntry["icon"] = getIcon(iconKey).toStdString();
 
 
                     jsonResponse["files"].push_back(fileEntry);
                 }
-                /*QDir dir(currentPath);
-                QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
-                for (const QFileInfo& fileInfo : list) {
-                    if (fileInfo.fileName().contains(".")) {
-                        files.push_back(fileInfo.fileName().toStdString());
-                    }
-                    else {
-                        folders.push_back(fileInfo.fileName().toStdString());
-                    }
-                }
-                sort(folders.begin(), folders.end());
-                sort(files.begin(), files.end());
-
-                for (const auto& folder : folders) {
-                    jsonResponse["files"].push_back(folder);
-                }
-                for (const auto& file : files) {
-                    jsonResponse["files"].push_back(file);
-                }*/
 
                 sendJsonResponse(socket, jsonResponse);
             }
