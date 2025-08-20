@@ -16,6 +16,25 @@ HttpRequestHandler::HttpRequestHandler(const QString& basePath, QObject* parent)
     }
 }
 
+QString HttpRequestHandler::getIcon(const QString& iconName) const
+{
+    QString iconPath = QString("./icons/%1.svg").arg(iconName);
+    QFile iconFile(iconPath);
+
+    if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qInfo() << "Failed to open icon file:" << iconPath;
+        iconPath = QString("./icons/unknown.svg");
+        iconFile.setFileName(iconPath);
+        if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qCritical() << "Failed to open unknown icon file:" << iconPath;
+            return QString(); // или верните какую-то стандартную иконку в виде строки
+        }
+    }
+
+    return QString::fromUtf8(iconFile.readAll());
+}
+
+
 void HttpRequestHandler::handleRequest()
 {
     std::vector<std::string> files;
@@ -39,6 +58,22 @@ void HttpRequestHandler::handleRequest()
 
                 QDir dir(currentPath);
                 QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
+
+                for (const QFileInfo& fileInfo : list) {
+                    nlohmann::json fileEntry;
+
+                    //QString iconKey = fileInfo.fileName().contains('.')
+                    //    ? fileInfo.fileName().section('.', 0, -2)  // Берем все до последней точки
+                    //    : fileInfo.fileName();                     // Или полное имя, если точки нет
+
+                    fileEntry["name"] = fileInfo.fileName().toStdString();
+                    //fileEntry["icon"] = getIcon(iconKey).toStdString();
+
+
+                    jsonResponse["files"].push_back(fileEntry);
+                }
+                /*QDir dir(currentPath);
+                QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
                 for (const QFileInfo& fileInfo : list) {
                     if (fileInfo.fileName().contains(".")) {
                         files.push_back(fileInfo.fileName().toStdString());
@@ -55,7 +90,7 @@ void HttpRequestHandler::handleRequest()
                 }
                 for (const auto& file : files) {
                     jsonResponse["files"].push_back(file);
-                }
+                }*/
 
                 sendJsonResponse(socket, jsonResponse);
             }

@@ -27,4 +27,5 @@ private:
         const QString& contentType = "text/plain") const;
     void sendJsonResponse(QTcpSocket* socket, const nlohmann::json& json) const;
     void handlePathChange(const QUrlQuery& query);
+    QString getIcon(const QString& iconName) const;
 };
