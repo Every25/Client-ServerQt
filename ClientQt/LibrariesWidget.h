@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QStack>
 #include <QStandardItemModel>
+#include <QStandardItem>
 #include <nlohmann/json.hpp>
 #include <QSvgRenderer>
 #include <QPixmap>

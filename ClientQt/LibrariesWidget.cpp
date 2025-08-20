@@ -4,12 +4,10 @@
 #include <QHBoxLayout>
 #include <QString>
 #include <QMessageBox>
-#include <QStandardItem>
-#include <QTreeView>
-#include <QStandardItemModel>
 
-QString ip = "127.0.0.1";
-//QString ip = "10.0.1.118";
+
+//QString ip = "127.0.0.1";
+QString ip = "10.0.1.118";
 int port = 8080;
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
@@ -100,6 +98,7 @@ QString LibrariesWidget::getFullPath(QStandardItem* item)
 
 void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 {
+    parentItem->removeRows(0, parentItem->rowCount());
 
     if (jsonObj.contains("files") && jsonObj["files"].is_array())
     {
