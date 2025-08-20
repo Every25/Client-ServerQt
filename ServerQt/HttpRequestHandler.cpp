@@ -27,7 +27,7 @@ QString HttpRequestHandler::getIcon(const QString& iconName) const
         iconFile.setFileName(iconPath);
         if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             qCritical() << "Failed to open unknown icon file:" << iconPath;
-            return QString(); 
+            return QString();
         }
     }
 
@@ -49,6 +49,11 @@ void HttpRequestHandler::handleRequest()
         if (request.startsWith("GET")) {
             processGetRequest(request);
             QFileInfo fileInfo(currentPath);
+
+            if (!fileInfo.exists()) {
+                sendResponse(socket, "404 Not Found", "Resource not found");
+                return;
+            }
 
             if (fileInfo.isDir()) {
                 QDir dir(currentPath);
@@ -87,9 +92,8 @@ void HttpRequestHandler::handleRequest()
                 for (const QFileInfo& fileInfo : files) {
                     nlohmann::json fileEntry;
 
-                    QString iconKey = fileInfo.fileName().contains('.')
-                        ? fileInfo.fileName().section('.', 0, -2)
-                        : fileInfo.fileName();
+                    QString iconKey = fileInfo.fileName().section('.', 0, -2);
+
 
                     fileEntry["name"] = fileInfo.fileName().toStdString();
                     fileEntry["icon"] = getIcon(iconKey).toStdString();
