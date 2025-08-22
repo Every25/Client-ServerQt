@@ -4,8 +4,9 @@
 
 struct Catalog
 {
+	QStandardItem* item;
 	QString name;
 	QString thumb;
-	QList<Catalog> catalogs;
+	//QList<Componet> components;
 };
 

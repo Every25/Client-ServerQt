@@ -16,6 +16,7 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     auto mainLayout = new QVBoxLayout(this);
     auto buttonLayout = new QHBoxLayout(this);
     libraries = new QList<Library>;
+    catalogs = new QList<Catalog>;
 
     treeView = new QTreeView(this);
     model = new QStandardItemModel(this);
@@ -54,20 +55,31 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
 LibrariesWidget::~LibrariesWidget()
 {
    delete libraries;
+   delete catalogs;
 }
 
 void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
 {
     QString selectedItem = model->data(index, Qt::DisplayRole).toString();
-    if (!index.isValid() || selectedItem.contains('.')) {
+    if (!index.isValid()) {
         return;
     }
-    foreach(const auto& lib, libraries) {
+    foreach(const auto& lib, *libraries) {
         if (lib.name == selectedItem) {
-            QString fullPath = "/Libraries" + getFullPath(lib.item);
+            QString fullPath = "/Libraries/" + lib.dir;
             client->currentPath = fullPath;
             client->sendRequest();
             currentLibrary = lib;
+            return;
+        }
+    }
+    foreach(const auto& cat, *catalogs)
+    {
+        if (cat.name == selectedItem) {
+            QString fullPath = "/Libraries/" + getFullPath(cat.item);
+            client->currentPath = fullPath;
+            client->sendRequest();
+            currentCatalog = cat;
         }
     }
    /* QStandardItem* item = model->itemFromIndex(index);
@@ -86,7 +98,7 @@ void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
         addJsonToModel(jsonData, root);
         return;
     }
-    addJsonToModel(jsonData, currentLibrary.item);
+    addLibraryToModel(jsonData, currentLibrary.item);
 }
 
 QString LibrariesWidget::getFullPath(QStandardItem* item)
@@ -108,42 +120,57 @@ QString LibrariesWidget::getFullPath(QStandardItem* item)
 void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 {
     parentItem->removeRows(0, parentItem->rowCount());
-    if (firstRequest)
-    {
         /*QString root_name = QString::fromStdString(jsonObj["name"].get<std::string>());
         root->setText(root_name);*/
 
-        if (jsonObj.contains("libraries") && jsonObj["libraries"].is_array())
-        {
-            for (const auto& lib : jsonObj["libraries"]) {
-                Library library;
-                library.name = QString::fromStdString(lib["name"].get<std::string>());
-                library.dir = QString::fromStdString(lib["dir"].get<std::string>());
-                library.ver = lib["ver"].get<double>();
-
-                library.item = new QStandardItem(library.name);
-                library.item->setIcon(QIcon::fromTheme("folder"));
-
-                QStandardItem* dummyChild = new QStandardItem(" ");
-                library.item->appendRow(dummyChild);
-
-                parentItem->appendRow(library.item);
-                libraries->append(library);
-            }
-        }
-        firstRequest = false;
-    }
-    else
+    if (jsonObj.contains("libraries") && jsonObj["libraries"].is_array())
     {
-        currentLibrary.components_location = QString::fromStdString(jsonObj["components_location"].get<std::string>());
-        currentLibrary.layouts_location = QString::fromStdString(jsonObj["layouts_location"].get<std::string>());
-        currentLibrary.sparam_location = QString::fromStdString(jsonObj["sparam_location"].get<std::string>());
-        currentLibrary.symbols_location = QString::fromStdString(jsonObj["symbols_location"].get<std::string>());
-        currentLibrary.thumbnails_location = QString::fromStdString(jsonObj["thumbnails_location"].get<std::string>());
-        currentLibrary.ugos_location = QString::fromStdString(jsonObj["ugos_location"].get<std::string>());
+        for (const auto& lib : jsonObj["libraries"]) {
+            Library library;
+            library.name = QString::fromStdString(lib["name"].get<std::string>());
+            library.dir = QString::fromStdString(lib["dir"].get<std::string>());
+            library.ver = lib["ver"].get<double>();
+
+            library.item = new QStandardItem(library.name);
+            library.item->setIcon(QIcon::fromTheme("folder"));
+
+            QStandardItem* dummyChild = new QStandardItem(" ");
+            library.item->appendRow(dummyChild);
+
+            parentItem->appendRow(library.item);
+            libraries->append(library);
+        }
     }
+    firstRequest = false;
 }
 
+void LibrariesWidget::addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
+{
+    parentItem->removeRows(0, parentItem->rowCount());
+    currentLibrary.components_location = QString::fromStdString(jsonObj["components_location"].get<std::string>());
+    currentLibrary.layouts_location = QString::fromStdString(jsonObj["layouts_location"].get<std::string>());
+    currentLibrary.sparam_location = QString::fromStdString(jsonObj["sparam_location"].get<std::string>());
+    currentLibrary.symbols_location = QString::fromStdString(jsonObj["symbols_location"].get<std::string>());
+    currentLibrary.thumbnails_location = QString::fromStdString(jsonObj["thumbnails_location"].get<std::string>());
+    currentLibrary.ugos_location = QString::fromStdString(jsonObj["ugos_location"].get<std::string>());
+    currentLibrary.veriloga_location = QString::fromStdString(jsonObj["veriloga_location"].get<std::string>());
+    for (const auto& cat : jsonObj["catalogs"]) {
+        Catalog catalog;
+        catalog.name = QString::fromStdString(cat["name"].get<std::string>());
+        catalog.thumb = QString::fromStdString(cat["thumb"].get<std::string>());
+
+        catalog.item = new QStandardItem(catalog.name);
+
+        /*if (catalog.components.isEmpty())
+        {*/
+            QStandardItem* dummyChild = new QStandardItem(" ");
+            catalog.item->appendRow(dummyChild);
+        /*}*/
+
+        parentItem->appendRow(catalog.item);
+        catalogs->append(catalog);
+    }
+}
 //void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 //{
 //    parentItem->removeRows(0, parentItem->rowCount());
