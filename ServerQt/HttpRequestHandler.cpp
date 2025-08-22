@@ -16,23 +16,23 @@ HttpRequestHandler::HttpRequestHandler(const QString& basePath, QObject* parent)
     }
 }
 
-QString HttpRequestHandler::getIcon(const QString& iconName) const
-{
-    QString iconPath = QString("./icons/%1.svg").arg(iconName);
-    QFile iconFile(iconPath);
-
-    if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qInfo() << "Failed to open icon file:" << iconPath;
-        iconPath = QString("./icons/unknown.svg");
-        iconFile.setFileName(iconPath);
-        if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qCritical() << "Failed to open unknown icon file:" << iconPath;
-            return QString();
-        }
-    }
-
-    return QString::fromUtf8(iconFile.readAll());
-}
+//QString HttpRequestHandler::getIcon(const QString& thumbnailsTocation, const QString& iconName) const
+//{
+//    QString iconPath = QString("./icons/%1.svg").arg(iconName);
+//    QFile iconFile(iconPath);
+//
+//    if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//        qInfo() << "Failed to open icon file:" << iconPath;
+//        iconPath = QString("./icons/unknown.svg");
+//        iconFile.setFileName(iconPath);
+//        if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//            qCritical() << "Failed to open unknown icon file:" << iconPath;
+//            return QString();
+//        }
+//    }
+//
+//    return QString::fromUtf8(iconFile.readAll());
+//}
 
 
 void HttpRequestHandler::handleRequest()
@@ -56,61 +56,27 @@ void HttpRequestHandler::handleRequest()
             }
 
             if (fileInfo.isDir()) {
-                QDir dir(currentPath);
-                QFileInfoList list = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot, QDir::Name);
+                QDir librariesDir(currentPath);
+                QStringList jsonFiles = librariesDir.entryList(QStringList() << "*.json", QDir::Files);
 
-                QList<QFileInfo> directories;
-                QList<QFileInfo> files;
+                if (!jsonFiles.isEmpty()) {
+                    QString jsonFilePath = librariesDir.filePath(jsonFiles.first());
+                    QFile jsonFile(jsonFilePath);
 
-                for (const QFileInfo& fileInfo : list) {
-                    if (fileInfo.isDir()) {
-                        directories.append(fileInfo);
+                    if (jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                        QByteArray jsonContent = jsonFile.readAll();
+                        sendResponse(socket, "200 OK", jsonContent, "application/json");
+                        jsonFile.close();
+                        return;
                     }
                     else {
-                        files.append(fileInfo);
+                        qWarning() << "Failed to open JSON file:" << jsonFilePath;
                     }
                 }
-
-                auto caseInsensitiveLessThan = [](const QFileInfo& a, const QFileInfo& b) {
-                    return a.fileName().compare(b.fileName(), Qt::CaseInsensitive) < 0;
-                    };
-
-                std::sort(directories.begin(), directories.end(), caseInsensitiveLessThan);
-                std::sort(files.begin(), files.end(), caseInsensitiveLessThan);
-
-                nlohmann::json jsonResponse;
-                jsonResponse["files"] = nlohmann::json::array();
-
-                for (const QFileInfo& fileInfo : directories) {
-                    nlohmann::json fileEntry;
-                    fileEntry["name"] = fileInfo.fileName().toStdString();
-                    fileEntry["icon"] = getIcon("folder").toStdString();
-                    fileEntry["type"] = "directory";
-                    jsonResponse["files"].push_back(fileEntry);
+                else {
+                    qWarning() << "No JSON files found in folder";
                 }
-
-                for (const QFileInfo& fileInfo : files) {
-                    nlohmann::json fileEntry;
-
-                    QString iconKey = fileInfo.fileName().section('.', 0, -2);
-
-
-                    fileEntry["name"] = fileInfo.fileName().toStdString();
-                    fileEntry["icon"] = getIcon(iconKey).toStdString();
-                    fileEntry["type"] = "file";
-
-                    jsonResponse["files"].push_back(fileEntry);
-                }
-
-                sendJsonResponse(socket, jsonResponse);
             }
-
-            else {
-                sendResponse(socket, "404 Not Found", "Resource not found");
-            }
-        }
-        else {
-            sendResponse(socket, "405 Method Not Allowed", "Only GET method is supported");
         }
     }
     catch (const std::exception& e) {
@@ -170,12 +136,3 @@ void HttpRequestHandler::sendResponse(QTcpSocket* socket, const QString& status,
     }
     socket->disconnectFromHost();
 }
-
-void HttpRequestHandler::sendJsonResponse(QTcpSocket* socket, const nlohmann::json& json) const
-{
-    std::string jsonStr = json.dump();
-    sendResponse(socket, "200 OK",
-        QByteArray::fromStdString(jsonStr),
-        "application/json");
-}
-
