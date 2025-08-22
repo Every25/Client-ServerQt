@@ -19,7 +19,7 @@ public:
 
     void sendRequest();
     QUrl url;
-    QString currentPath = "/home";
+    QString currentPath = "/Libraries";
     QUrlQuery query;
 
 signals:

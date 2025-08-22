@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="14mm" height="11mm"
+viewBox="0 0 146 111">
+<title>ports</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="41.00 41.00 70.52 41.00 90.74 55.87 70.45 70.46 41.00 70.46 41.00 41.00" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<polyline points="90.74 55.87 105.22 55.87" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+</svg>

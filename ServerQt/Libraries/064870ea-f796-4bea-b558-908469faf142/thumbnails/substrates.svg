@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="17mm" height="10mm"
+viewBox="0 0 174 106">
+<title>substrates</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<path fill="rgb(0,255,0)" stroke="rgb(0,255,0)" stroke-width="2" d=" M 41 57 L 133 57 133 65 41 65 41 57 Z" />
+<path fill="none" stroke="rgb(0,96,191)" stroke-width="2" d=" M 59 41 L 115 41 115 56 59 56 59 41 Z" />
+<path fill="none" stroke="rgb(0,140,0)" stroke-width="2" d=" M 41 57 L 133 57 133 59 41 59 41 57 Z" />
+</svg>

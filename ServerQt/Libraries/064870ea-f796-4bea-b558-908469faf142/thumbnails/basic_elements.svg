@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="17mm" height="12mm"
+viewBox="0 0 170 124">
+<title>basic_elements</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="41.00 46.08 51.35 46.08 53.30 42.29 57.09 49.78 60.88 42.20 64.67 49.78 68.46 42.20 72.25 49.78 74.33 46.08 85.05 46.08" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<polyline points="129.06 46.08 120.00 46.08" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<polyline points="85.05 46.08 93.66 46.08" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<path fill="none" stroke="rgb(0,96,191)" stroke-width="2" d=" M 94 46 C 98 35 102 46 102 46 C 107 35 111 46 111 46 C 116 35 120 46 120 46" />
+<polyline points="85.05 83.48 85.05 67.74" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<polyline points="85.05 46.08 85.05 62.56" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<path fill="none" stroke="rgb(0,96,191)" stroke-width="2" d=" M 92 61 C 85 64 79 61 79 61" />
+<polyline points="91.56 67.69 78.69 67.69" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<circle cx="85" cy="46" r="2" fill="rgb(0,0,0)" stroke="none" stroke-width="2" />
+</svg>

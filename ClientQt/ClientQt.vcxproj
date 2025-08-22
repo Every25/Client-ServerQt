@@ -108,6 +108,10 @@
   <ItemGroup>
     <QtMoc Include="LibrariesWidget.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Catalog.h" />
+    <ClInclude Include="Library.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

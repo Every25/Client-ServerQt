@@ -1,17 +1,18 @@
 ﻿#pragma once
 #include "Client.h"
+#include <Library.h>
 
 #include <QWidget>
 #include <QTreeView>
 #include <QKeyEvent>
 #include <QPushButton>
-#include <QStack>
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <nlohmann/json.hpp>
 #include <QSvgRenderer>
 #include <QPixmap>
 #include <QPainter>
+#include <QList>
 
 class QTextEdit;
 
@@ -29,8 +30,10 @@ private:
     QStandardItem* root;
     Client* client;
     QPushButton* refreshButton;
-    QStandardItem* currentItem;
-    QStack<QString> pathHistory;
+    Library currentLibrary;
+    Catalog currentCatalog;
+    bool firstRequest = true;
+    QList<Library>* libraries;
 
     void addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     QIcon convertSvgToIcon(QString svgString);

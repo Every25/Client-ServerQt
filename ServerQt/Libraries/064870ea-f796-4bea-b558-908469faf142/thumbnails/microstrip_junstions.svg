@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="16mm" height="12mm"
+viewBox="0 0 167 129">
+<title>junstions</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="41.00 49.72 49.31 49.72 57.91 49.72 57.91 41.00 109.15 41.00 109.15 49.76 126.35 49.76 109.15 49.76 109.15 58.10 92.29 58.10 92.29 73.01 83.43 73.01 83.43 87.68 83.43 72.94 74.54 72.94 74.54 57.76 57.91 57.76 57.91 49.72" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+</svg>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="20mm" height="14mm"
+viewBox="0 0 205 146">
+<title>MLIN</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="44.56 55.23 67.90 55.23 67.90 41.00 137.44 41.00 137.44 55.23 160.78 55.23 137.44 55.23 137.44 69.46 67.90 69.46 67.90 55.23" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+<path fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="0" d=" M 72.29 98.81 L 72.31 76.56 76.61 76.56 80.71 92.25 80.93 93.08 81.12 93.82 81.29 94.48 81.43 95.04 81.55 95.52 81.67 94.99 81.83 94.38 82.01 93.67 82.21 92.87 82.44 91.98 86.49 76.56 90.81 76.56 90.79 98.81 88.28 98.81 88.30 79.34 83.24 98.81 79.85 98.81 74.82 79.34 74.80 98.81 Z M 95.49 98.81 L 95.51 76.56 98.02 76.56 98.00 96.03 108.04 96.03 108.03 98.81 Z M 111.17 98.81 L 111.18 76.56 113.69 76.56 113.67 98.81 Z M 118.69 98.81 L 118.71 76.56 121.39 76.56 131.86 94.19 131.87 76.56 134.38 76.56 134.36 98.81 131.68 98.81 121.21 81.18 121.20 98.81 Z" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 157 53 C 157 52 159 52 159 52 L 163 52 L 163 52 C 164 52 164 53 164 53 L 164 57 L 164 57 C 164 59 163 59 163 59 L 159 59 L 159 59 C 157 59 157 57 157 57 L 157 53 Z" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 41 53 C 41 52 43 52 43 52 L 46 52 L 46 52 C 48 52 48 53 48 53 L 48 57 L 48 57 C 48 59 46 59 46 59 L 43 59 L 43 59 C 41 59 41 57 41 57 L 41 53 Z" />
+<polyline points="56.20 50.68 51.49 59.71" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+</svg>

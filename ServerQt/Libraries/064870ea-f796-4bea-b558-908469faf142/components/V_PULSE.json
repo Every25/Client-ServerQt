@@ -1,0 +1,88 @@
+{
+  "library": "Basic/Sources",
+  "name": "SRC",
+  "model": "V_PULSE",
+  "view_model": true,
+  "group": "STD",
+  "pins": [
+    "P1",
+    "P2"
+  ],
+  "parameters": [
+    {
+      "name": "Vlow",
+      "type": "Real",
+      "default": 0.0,
+      "factor": "",
+      "unit": "V",
+      "display": true
+    },
+    {
+      "name": "Vhigh",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "",
+      "unit": "V",
+      "display": true
+    },
+    {
+      "name": "Delay",
+      "type": "Real",
+      "default": 0.0,
+      "factor": "n",
+      "unit": "sec",
+      "display": true
+    },
+    {
+      "name": "Edge",
+      "type": "String",
+      "default": "linear",
+      "display": true
+    },
+    {
+      "name": "Rise",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "n",
+      "unit": "sec",
+      "display": true
+    },
+    {
+      "name": "Fall",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "n",
+      "unit": "sec",
+      "display": true
+    },
+    {
+      "name": "Width",
+      "type": "Real",
+      "default": 3.0,
+      "factor": "n",
+      "unit": "sec",
+      "display": true
+    },
+    {
+      "name": "Period",
+      "type": "Real",
+      "default": 10.0,
+      "factor": "n",
+      "unit": "sec",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+    }
+  },
+  "layout": {
+    "model": ""
+  },
+  "ugo": {
+    "model": "V_PULSE"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}
