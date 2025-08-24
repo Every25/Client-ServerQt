@@ -43,7 +43,7 @@ private:
     QString getFullPath(QStandardItem* item);
 
 public slots:
-    void updateTree(const nlohmann::json& jsonData);
+    void updateData(const nlohmann::json& jsonData);
     void handleError(const QString& errorString);
     void RequestWithSelectedItem(const QModelIndex& index);
     void refreshButtonClicked();

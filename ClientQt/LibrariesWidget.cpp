@@ -42,7 +42,8 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     //привязка сигналов
     connect(treeView, &QTreeView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
-    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
+    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateData);
+    //connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
     connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
     //привязка сигналов для кнопок
@@ -80,18 +81,13 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
             client->currentPath = fullPath;
             client->sendRequest();
             currentCatalog = cat;
+            return;
         }
     }
-   /* QStandardItem* item = model->itemFromIndex(index);
-    QString fullPath = "/Libraries" + getFullPath(item);*/
-
-   /* client->currentPath = fullPath;
-    client->sendRequest();
-    currentItem = item;*/
 }
 
 //Обновление QTreeView после получения данных с сервера
-void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
+void LibrariesWidget::updateData(const nlohmann::json& jsonData)
 {
     if (client->currentPath == "/Libraries")
     {
@@ -171,31 +167,6 @@ void LibrariesWidget::addLibraryToModel(const nlohmann::json& jsonObj, QStandard
         catalogs->append(catalog);
     }
 }
-//void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
-//{
-//    parentItem->removeRows(0, parentItem->rowCount());
-//
-//    if (jsonObj.contains("files") && jsonObj["files"].is_array())
-//    {
-//        for (const auto& file : jsonObj["files"]) {
-//            QString nameStr = QString::fromStdString(file["name"].get<std::string>());
-//            QString iconStr = QString::fromStdString(file["icon"].get<std::string>());
-//            QString typeStr = QString::fromStdString(file["type"].get<std::string>());
-//
-//            QIcon icon = convertSvgToIcon(iconStr);
-//            QStandardItem* nameItem = new QStandardItem(nameStr);
-//            nameItem->setIcon(icon);
-//
-//            if (typeStr == "directory")
-//            {
-//                QStandardItem* dummyChild = new QStandardItem(" ");
-//                nameItem->appendRow(dummyChild);
-//            }
-//            parentItem->appendRow(nameItem);
-//        }
-//    }
-//}
-
 
 QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
 {
