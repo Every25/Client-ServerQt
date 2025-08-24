@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Catalog.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Library.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

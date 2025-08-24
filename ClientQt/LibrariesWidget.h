@@ -2,6 +2,7 @@
 #include "Client.h"
 #include <Library.h>
 #include <Catalog.h>
+#include <Component.h>
 
 #include <QWidget>
 #include <QTreeView>
@@ -41,6 +42,9 @@ private:
     void addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     QIcon convertSvgToIcon(QString svgString);
     QString getFullPath(QStandardItem* item);
+    void ComponentFromJson(const nlohmann::json& j, Component& component);
+    void CatalogFromJson(const nlohmann::json& j, Catalog& cat);
+    void LibraryFromJson(const nlohmann::json& j, Library& lib);
 
 public slots:
     void updateData(const nlohmann::json& jsonData);

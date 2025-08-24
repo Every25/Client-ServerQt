@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <Component.h>
 #include <QString>
 
 struct Catalog
@@ -7,6 +8,7 @@ struct Catalog
 	QStandardItem* item;
 	QString name;
 	QString thumb;
-	//QList<Componet> components;
+	QList<Catalog> catalogs;
+	QList<Component> components;
 };
 

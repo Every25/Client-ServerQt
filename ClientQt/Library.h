@@ -17,6 +17,5 @@ struct Library
 	QString thumbnails_location;
 	QString ugos_location;
 	QString veriloga_location;
-	Catalog catalog;
-
+	QList<Catalog> catalogs;
 };
