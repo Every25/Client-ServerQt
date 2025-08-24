@@ -15,6 +15,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QList>
+#include "ComponentsTable.h"
 
 class QTextEdit;
 
@@ -28,6 +29,7 @@ public:
 
 private:
     QTreeView* treeView;
+    ComponentsTable* componentsTable;
     QStandardItemModel* model;
     QStandardItem* root;
     Client* client;
@@ -46,7 +48,7 @@ private:
     void CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem);
 
 public slots:
-    void updateData(const nlohmann::json& jsonData);
+    void updateTree(const nlohmann::json& jsonData);
     void handleError(const QString& errorString);
     void RequestWithSelectedItem(const QModelIndex& index);
     void refreshButtonClicked();

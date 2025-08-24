@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 
+
 QString ip = "127.0.0.1";
 //QString ip = "10.0.1.118";
 int port = 8080;
@@ -30,9 +31,12 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     refreshButton = new QPushButton(QIcon("icons/refresh.svg"), "", this);
     buttonLayout->addWidget(refreshButton);
     
+    componentsTable = new ComponentsTable(this);  
 
     mainLayout->addLayout(buttonLayout);
     mainLayout->addWidget(treeView);
+    mainLayout->addWidget(componentsTable);
+
     setLayout(mainLayout);
     
     // Создание клиента
@@ -42,7 +46,7 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     //привязка сигналов
     connect(treeView, &QTreeView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
-    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateData);
+    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
     connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
     //привязка сигналов для кнопок
@@ -76,17 +80,20 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
     foreach(const auto& cat, *catalogs)
     {
         if (cat.name == selectedItem) {
-            QString fullPath = "/Libraries/" + getFullPath(cat.item);
-            client->currentPath = fullPath;
-            client->sendRequest();
             currentCatalog = cat;
+            //Обновление данных компонентов таблицы
+            if (!currentCatalog.components.isEmpty())
+            {
+                componentsTable->updateComponents(currentCatalog.components);
+                return;
+            }
             return;
         }
     }
 }
 
 //Обновление QTreeView после получения данных с сервера
-void LibrariesWidget::updateData(const nlohmann::json& jsonData)
+void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
 {
     if (client->currentPath == "/Libraries")
     {
@@ -221,4 +228,5 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
             catalog.components.push_back(comp);
         }
     }
+    catalogs->push_back(catalog);
 }

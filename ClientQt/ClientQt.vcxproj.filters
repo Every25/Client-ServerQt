@@ -43,9 +43,15 @@
     <ClCompile Include="LibrariesWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentsTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="LibrariesWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ComponentsTable.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

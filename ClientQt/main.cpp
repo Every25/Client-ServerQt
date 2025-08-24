@@ -8,5 +8,6 @@ int main(int argc, char *argv[])
     LibrariesWidget window;
     window.setWindowTitle(QStringLiteral(u"Библиотеки элементов"));
     window.show();
+    window.resize(600, 600);
     return app.exec();
 }

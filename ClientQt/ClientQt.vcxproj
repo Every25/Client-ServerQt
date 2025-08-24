@@ -102,6 +102,7 @@
     <QtUic Include="ClientQt.ui" />
     <QtMoc Include="Client.h" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ComponentsTable.cpp" />
     <ClCompile Include="LibrariesWidget.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -111,6 +112,7 @@
   <ItemGroup>
     <ClInclude Include="Catalog.h" />
     <ClInclude Include="Component.h" />
+    <QtMoc Include="ComponentsTable.h" />
     <ClInclude Include="Library.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
