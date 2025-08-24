@@ -43,7 +43,6 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     connect(treeView, &QTreeView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(client, &Client::dataReceived, this, &LibrariesWidget::updateData);
-    //connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
     connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
     //привязка сигналов для кнопок
@@ -143,24 +142,18 @@ void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardIte
 void LibrariesWidget::addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 {
     parentItem->removeRows(0, parentItem->rowCount());
-    LibraryFromJson(jsonObj, currentLibrary);
-    for (const auto& cat : jsonObj["catalogs"]) {
-        for (const auto& catl : jsonObj["catalogs"])
-        {
+    currentLibrary.components_location = QString::fromStdString(jsonObj["components_location"].get<std::string>());
+    currentLibrary.layouts_location = QString::fromStdString(jsonObj["layouts_location"].get<std::string>());
+    currentLibrary.sparam_location = QString::fromStdString(jsonObj["sparam_location"].get<std::string>());
+    currentLibrary.symbols_location = QString::fromStdString(jsonObj["symbols_location"].get<std::string>());
+    currentLibrary.thumbnails_location = QString::fromStdString(jsonObj["thumbnails_location"].get<std::string>());
+    currentLibrary.ugos_location = QString::fromStdString(jsonObj["ugos_location"].get<std::string>());
+    currentLibrary.veriloga_location = QString::fromStdString(jsonObj["veriloga_location"].get<std::string>());
+    if (jsonObj.contains("catalogs") && jsonObj["catalogs"].is_array()) {
+        for (const auto& catalogJson : jsonObj["catalogs"]) {
             Catalog catalog;
-            catalog.name = QString::fromStdString(catl["name"].get<std::string>());
-            catalog.thumb = QString::fromStdString(catl["thumb"].get<std::string>());
-
-            catalog.item = new QStandardItem(catalog.name);
-
-            /*if (catalog.components.isEmpty())
-            {*/
-            QStandardItem* dummyChild = new QStandardItem(" ");
-            catalog.item->appendRow(dummyChild);
-            /*}*/
-
-            parentItem->appendRow(catalog.item);
-            catalogs->append(catalog);
+            // Используем вашу функцию для заполнения каталога
+            CatalogFromJson(catalogJson, catalog, parentItem);
         }
     }
 }
@@ -198,41 +191,34 @@ void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component
     component.desc = QString::fromStdString(jsonObj["desc"].get<std::string>());
 }
 
-void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog)
+void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem)
 {
     catalog.name = QString::fromStdString(jsonObj["name"].get<std::string>());
     catalog.thumb = QString::fromStdString(jsonObj["thumb"].get<std::string>());
+
+    catalog.item = new QStandardItem(catalog.name);
+
+
+
+    if (parentItem) {
+        parentItem->appendRow(catalog.item);
+    }
+
+    //Обработка вложенных каталогов
     if (jsonObj.contains("catalogs") && jsonObj["catalogs"].is_array()) {
         for (const auto& subCatalogJson : jsonObj["catalogs"]) {
             Catalog subCat;
-            CatalogFromJson(subCatalogJson, subCat);
+            CatalogFromJson(subCatalogJson, subCat, catalog.item);
             catalog.catalogs.push_back(subCat);
         }
     }
+
+    //Обработка компонентов (если есть)
     if (jsonObj.contains("components") && jsonObj["components"].is_array()) {
         for (const auto& compJson : jsonObj["components"]) {
             Component comp;
             ComponentFromJson(compJson, comp);
             catalog.components.push_back(comp);
-        }
-    }
-    catalog.item = new QStandardItem(catalog.name);
-}
-
-void LibrariesWidget::LibraryFromJson(const nlohmann::json& jsonObj, Library& lib)
-{
-    lib.components_location = QString::fromStdString(jsonObj["components_location"].get<std::string>());
-    lib.layouts_location = QString::fromStdString(jsonObj["layouts_location"].get<std::string>());
-    lib.sparam_location = QString::fromStdString(jsonObj["sparam_location"].get<std::string>());
-    lib.symbols_location = QString::fromStdString(jsonObj["symbols_location"].get<std::string>());
-    lib.thumbnails_location = QString::fromStdString(jsonObj["thumbnails_location"].get<std::string>());
-    lib.ugos_location = QString::fromStdString(jsonObj["ugos_location"].get<std::string>());
-    lib.veriloga_location = QString::fromStdString(jsonObj["veriloga_location"].get<std::string>());
-    if (jsonObj.contains("catalogs") && jsonObj["catalogs"].is_array()) {
-        for (const auto& catalogJson : jsonObj["catalogs"]) {
-            Catalog catalog;
-            CatalogFromJson(catalogJson, catalog);
-            lib.catalogs.push_back(catalog);
         }
     }
 }

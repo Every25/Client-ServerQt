@@ -43,8 +43,7 @@ private:
     QIcon convertSvgToIcon(QString svgString);
     QString getFullPath(QStandardItem* item);
     void ComponentFromJson(const nlohmann::json& j, Component& component);
-    void CatalogFromJson(const nlohmann::json& j, Catalog& cat);
-    void LibraryFromJson(const nlohmann::json& j, Library& lib);
+    void CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem);
 
 public slots:
     void updateData(const nlohmann::json& jsonData);
