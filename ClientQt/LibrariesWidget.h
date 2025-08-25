@@ -40,7 +40,7 @@ private:
     QList<Library>* libraries;
     QList<Catalog>* catalogs;
 
-    void addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
+    void addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     void addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     QIcon convertSvgToIcon(QString svgString);
     QString getFullPath(QStandardItem* item);

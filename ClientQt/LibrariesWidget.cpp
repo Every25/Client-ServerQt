@@ -119,12 +119,14 @@ QString LibrariesWidget::getFullPath(QStandardItem* item)
     return "/" + pathComponents.join("/");
 }
 
-void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
+void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 {
-    parentItem->removeRows(0, parentItem->rowCount());
+    if (firstRequest)
+    {
+        parentItem->removeRows(0, parentItem->rowCount());
         /*QString root_name = QString::fromStdString(jsonObj["name"].get<std::string>());
         root->setText(root_name);*/
-
+    }
     if (jsonObj.contains("libraries") && jsonObj["libraries"].is_array())
     {
         for (const auto& lib : jsonObj["libraries"]) {
@@ -159,7 +161,6 @@ void LibrariesWidget::addLibraryToModel(const nlohmann::json& jsonObj, QStandard
     if (jsonObj.contains("catalogs") && jsonObj["catalogs"].is_array()) {
         for (const auto& catalogJson : jsonObj["catalogs"]) {
             Catalog catalog;
-            // Используем вашу функцию для заполнения каталога
             CatalogFromJson(catalogJson, catalog, parentItem);
         }
     }
@@ -179,16 +180,6 @@ QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
     renderer.render(&painter);
 
     return QIcon(pixmap);
-}
-
-void LibrariesWidget::handleError(const QString& errorString)
-{
-    QMessageBox::warning(this, QStringLiteral(u"Ошибка при получении данных: "), errorString);
-}
-
-void LibrariesWidget::refreshButtonClicked()
-{
-    client->sendRequest();
 }
 
 void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component& component)
@@ -229,4 +220,14 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
         }
     }
     catalogs->push_back(catalog);
+}
+
+void LibrariesWidget::handleError(const QString& errorString)
+{
+    QMessageBox::warning(this, QStringLiteral(u"Ошибка при получении данных: "), errorString);
+}
+
+void LibrariesWidget::refreshButtonClicked()
+{
+    client->sendRequest();
 }
