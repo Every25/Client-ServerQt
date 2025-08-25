@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Client.h"
+//#include "Client.h"
 #include <Library.h>
 #include <Catalog.h>
 #include <Component.h>
@@ -16,6 +16,7 @@
 #include <QPainter>
 #include <QList>
 #include "ComponentsTable.h"
+#include <QDir>
 
 class QTextEdit;
 
@@ -32,13 +33,14 @@ private:
     ComponentsTable* componentsTable;
     QStandardItemModel* model;
     QStandardItem* root;
-    Client* client;
+    //Client* client;
     QPushButton* refreshButton;
     Library currentLibrary;
     Catalog currentCatalog;
     bool firstRequest = true;
     QList<Library>* libraries;
     QList<Catalog>* catalogs;
+    QString currentPath = "./Libraries";
 
     void addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     void addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
@@ -46,6 +48,7 @@ private:
     QString getFullPath(QStandardItem* item);
     void ComponentFromJson(const nlohmann::json& j, Component& component);
     void CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem);
+    nlohmann::json readJson();
 
 public slots:
     void updateTree(const nlohmann::json& jsonData);

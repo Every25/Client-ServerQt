@@ -1,0 +1,12 @@
+{
+  "name": "Other",
+  "components_location": "components",
+  "layouts_location": "layouts",
+  "sparam_location": "sparam",
+  "symbols_location": "symbols",
+  "thumbnails_location": "thumbnails",
+  "ugos_location": "ugos",
+  "veriloga_location": "veriloga",
+  "catalogs": [
+  ]
+}

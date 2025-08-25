@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="19mm" height="14mm"
+viewBox="0 0 198 146">
+<title>MLEF</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="44.56 55.23 62.87 55.23 62.87 41.00 117.44 41.00 117.44 55.23 117.44 55.23 117.44 55.23 117.44 69.46 62.87 69.46 62.87 55.23" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+<path fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="0" d=" M 59.29 98.81 L 59.31 76.56 63.61 76.56 67.71 92.25 67.93 93.08 68.12 93.82 68.29 94.48 68.43 95.04 68.55 95.52 68.67 94.99 68.83 94.38 69.01 93.67 69.21 92.87 69.44 91.98 73.49 76.56 77.81 76.56 77.79 98.81 75.28 98.81 75.30 79.34 70.24 98.81 66.85 98.81 61.82 79.34 61.80 98.81 Z M 82.49 98.81 L 82.51 76.56 85.02 76.56 85.00 96.03 95.04 96.03 95.03 98.81 Z M 97.85 98.81 L 97.87 76.56 112.29 76.56 112.29 79.34 100.38 79.34 100.37 85.95 111.65 85.95 111.65 88.73 100.37 88.73 100.36 96.03 112.59 96.03 112.59 98.81 Z M 116.35 98.81 L 116.37 76.56 129.85 76.56 129.85 79.34 118.87 79.34 118.86 85.95 128.27 85.95 128.27 88.73 118.86 88.73 118.86 98.81 Z" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 41 53 C 41 52 43 52 43 52 L 46 52 L 46 52 C 48 52 48 53 48 53 L 48 57 L 48 57 C 48 59 46 59 46 59 L 43 59 L 43 59 C 41 59 41 57 41 57 L 41 53 Z" />
+<polyline points="117.44 55.23 127.00 55.23 127.00 45.00 127.00 65.00" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+<polyline points="134.00 45.00 134.00 65.00 134.00 55.00 144.00 55.00 144.00 41.12 144.00 69.31" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+<polyline points="150.77 46.49 150.77 63.69" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+<polyline points="157.21 51.32 157.21 58.93" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+<polyline points="56.78 50.69 52.07 59.72" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+</svg>

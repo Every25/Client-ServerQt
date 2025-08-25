@@ -1,0 +1,35 @@
+{
+  "library": "Basic/Lumped Elements",
+  "name": "L",
+  "model": "L",
+  "view_model": true,
+  "group": "STD",
+  "pins": [
+    "P1",
+    "P2"
+  ],
+  "parameters": [
+    {
+      "name": "L",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "n",
+      "unit": "H",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "ind"
+    }
+  },
+  "layout": {
+    "model": "L_pins"
+  },
+  "ugo": {
+    "model": "L"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}

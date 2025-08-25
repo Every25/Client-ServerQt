@@ -1,0 +1,51 @@
+{
+  "library": "Basic/Lumped Elements",
+  "name": "R",
+  "model": "R",
+  "view_model": true,
+  "group": "STD",
+  "pins": [
+    "P1",
+    "P2"
+  ],
+  "parameters": [
+    {
+      "name": "R",
+      "type": "Real",
+      "default": 50.0,
+      "factor": "",
+      "unit": "Ohm",
+      "display": true
+    },
+    {
+      "name": "W",
+      "type": "Real",
+      "default": 0.0,
+      "factor": "u",
+      "unit": "m",
+      "display": false
+    },
+    {
+      "name": "L",
+      "type": "Real",
+      "default": 0.0,
+      "factor": "u",
+      "unit": "m",
+      "display": false
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "mode": "res"
+    }
+  },
+  "layout": {
+    "model": "R_pins"
+  },
+  "ugo": {
+    "model": "R"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}

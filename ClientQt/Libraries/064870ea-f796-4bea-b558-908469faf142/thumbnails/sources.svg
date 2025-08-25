@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="10mm" height="12mm"
+viewBox="0 0 109 127">
+<title>sources</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="0" d=" M 45.00 50.03 L 45.00 47.80 42.65 47.80 42.65 46.27 45.00 46.27 45.01 44.04 46.63 44.04 46.62 46.27 48.97 46.27 48.97 47.80 46.62 47.80 46.62 50.03 Z" />
+<path fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="0" d=" M 43.38 81.67 L 43.38 80.25 49.04 80.25 49.04 81.67 Z" />
+<polyline points="54.28 41.18 54.28 49.61" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<polyline points="54.25 77.49 54.25 86.39" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+<circle cx="54.33" cy="63.53" r="13.83" fill="none" stroke="rgb(0,96,191)" stroke-width="1" />
+<path fill="none" stroke="rgb(0,96,191)" stroke-width="2" d=" M 46 64 C 49 69 51 69 54 64 C 58 59 60 59 63 64" />
+</svg>

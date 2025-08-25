@@ -1,0 +1,165 @@
+{
+  "name": "Basic",
+  "components_location": "components",
+  "layouts_location": "layouts",
+  "sparam_location": "sparam",
+  "symbols_location": "symbols",
+  "thumbnails_location": "thumbnails",
+  "ugos_location": "ugos",
+  "veriloga_location": "veriloga",
+  "catalogs": [
+    {
+      "name": "Lumped Elements",
+      "thumb": "basic_elements",
+      "catalogs": [],
+      "components": [
+        {
+          "model": "R",
+          "thumb": "R",
+          "desc": "Resistor"
+        },
+        {
+          "model": "L",
+          "thumb": "L",
+          "desc": "Inductor"
+        },
+        {
+          "model": "C",
+          "thumb": "C",
+          "desc": "Capacitor"
+        }
+      ]
+    },
+    {
+      "name": "Microstrip",
+      "thumb": "microstrip",
+      "catalogs": [
+        {
+          "name": "Bends",
+          "thumb": "microstrip_bends",
+          "catalogs": [],
+          "components": [
+            {
+              "model": "MBEND",
+              "thumb": "MBEND",
+              "desc": "Microstrip Bend"
+            }
+          ]
+        },
+        {
+          "name": "Junctions",
+          "thumb": "microstrip_junctions",
+          "catalogs": [],
+          "components": [
+            {
+              "model": "MCROSS",
+              "thumb": "MCROSS",
+              "desc": "Microstrip Cross-Junction"
+            },
+            {
+              "model": "MTEE",
+              "thumb": "MTEE",
+              "desc": "Microstrip T-Junction"
+            }
+          ]
+        },
+        {
+          "name": "Lines",
+          "thumb": "microstrip_lines",
+          "catalogs": [],
+          "components": [
+            {
+              "model": "MLEF",
+              "thumb": "MLEF",
+              "desc": "Microstrip Line Open-End Effect"
+            },
+            {
+              "model": "MLIN",
+              "thumb": "MLIN",
+              "desc": "Microstrip Line"
+            },
+            {
+              "model": "MLOC",
+              "thumb": "MLOC",
+              "desc": "Microstrip Open-Circuited Stub"
+            },
+            {
+              "model": "MSTEP",
+              "thumb": "MSTEP",
+              "desc": "Microstrip Step in Width"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ports",
+      "thumb": "ports",
+      "catalogs": [],
+      "components": [
+        {
+          "model": "TERM",
+          "thumb": "TERM",
+          "desc": "Port Impedance Termination for S-Parameters"
+        },
+        {
+          "model": "TERMG",
+          "thumb": "TERMG",
+          "desc": "Port Impedance Termination for S-Parameters with Grounded Reference"
+        }
+      ]
+    },
+    {
+      "name": "Sources",
+      "thumb": "sources",
+      "catalogs": [],
+      "components": [
+        {
+          "model": "V_AC",
+          "thumb": "V_AC",
+          "desc": "AC Voltage Source"
+        },
+        {
+          "model": "V_DC",
+          "thumb": "V_DC",
+          "desc": "DC Voltage Source"
+        },
+        {
+          "model": "V_PULSE",
+          "thumb": "V_PULSE",
+          "desc": "Voltage Source with Linear Edge Shape"
+        }
+      ]
+    },
+    {
+      "name": "Substrates",
+      "thumb": "substrates",
+      "catalogs": [],
+      "components": [
+        {
+          "model": "MSUB",
+          "thumb": "MSUB",
+          "desc": "Microstrip Substrate"
+        }
+      ]
+    },
+    {
+      "name": "General",
+      "thumb": "",
+      "catalogs": [
+        {
+          "name": "Data Item",
+          "thumb": "SNP",
+          "catalogs": [],
+          "components": [
+            {
+              "model": "SnP",
+              "thumb": "snp",
+              "desc": "Dynamic N-Port S-perameter File"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

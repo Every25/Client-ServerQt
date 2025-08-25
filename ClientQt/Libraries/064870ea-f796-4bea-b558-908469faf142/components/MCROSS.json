@@ -1,0 +1,66 @@
+{
+  "library": "Basic/Microstrip/Junctions",
+  "name": "CROS",
+  "model": "MCROSS",
+  "view_model": true,
+  "group": "PAR",
+  "pins": [
+    "P1",
+    "P2",
+    "P3",
+    "P4"
+  ],
+  "parameters": [
+    {
+      "name": "Subst",
+      "type": "String",
+      "default": "MSub1",
+      "display": true
+    },
+    {
+      "name": "W1",
+      "type": "Real",
+      "default": 635.0,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "W2",
+      "type": "Real",
+      "default": 1270.0,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "W3",
+      "type": "Real",
+      "default": 635.0,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "W4",
+      "type": "Real",
+      "default": 1270.0,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+    }
+  },
+  "layout": {
+    "model": "MCROSS_pins"
+  },
+  "ugo": {
+    "model": "MCROSS"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}

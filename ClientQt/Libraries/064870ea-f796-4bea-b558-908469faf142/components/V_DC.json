@@ -1,0 +1,42 @@
+{
+  "library": "Basic/Sources",
+  "name": "SRC",
+  "model": "V_DC",
+  "view_model": true,
+  "group": "STD",
+  "pins": [
+    "P1",
+    "P2"
+  ],
+  "parameters": [
+    {
+      "name": "Vdc",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "",
+      "unit": "V",
+      "display": true
+    },
+    {
+      "name": "Vac",
+      "type": "Real",
+      "default": "",
+      "factor": "",
+      "unit": "A",
+      "display": false
+    }
+  ],
+  "schematic": {
+    "netlist": {
+    }
+  },
+  "layout": {
+    "model": ""
+  },
+  "ugo": {
+    "model": "V_DC"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}

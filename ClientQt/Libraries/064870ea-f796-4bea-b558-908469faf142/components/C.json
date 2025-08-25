@@ -1,0 +1,35 @@
+{
+  "library": "Basic/Lumped Elements",
+  "name": "C",
+  "model": "C",
+  "view_model": true,
+  "group": "STD",
+  "pins": [
+    "P1",
+    "P2"
+  ],
+  "parameters": [
+    {
+      "name": "C",
+      "type": "Real",
+      "default": 1,
+      "factor": "p",
+      "unit": "F",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "cap"
+    }
+  },
+  "layout": {
+    "model": "C_pins"
+  },
+  "ugo": {
+    "model": "C"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}

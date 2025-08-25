@@ -1,0 +1,156 @@
+{
+  "library": "Basic/Substrates",
+  "name": "SUB",
+  "model": "MSUB",
+  "view_model": true,
+  "group": "SUB",
+  "parameters": [
+    {
+      "name": "H",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "m",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "Er",
+      "type": "Real",
+      "default": 9.8,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "Rho",
+      "type": "Real",
+      "default": 1.0E-50,
+      "factor": "",
+      "unit": "Ohm/m",
+      "display": true
+    },
+    {
+      "name": "Hu",
+      "type": "Real",
+      "default": 1.00000054E+41,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "T",
+      "type": "Real",
+      "default": 35,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "TanD",
+      "type": "Real",
+      "default": 2E-04,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "D",
+      "type": "Real",
+      "default": 0.15E-06,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "Cond1",
+      "type": "String",
+      "default": "cond:drawing",
+      "display": false
+    },
+    {
+      "name": "Cond2",
+      "type": "String",
+      "default": "cond2:drawing",
+      "display": false
+    },
+    {
+      "name": "Diel1",
+      "type": "String",
+      "default": "cond:drawing",
+      "display": false
+    },
+    {
+      "name": "Diel2",
+      "type": "String",
+      "default": "cond:drawing",
+      "display": false
+    },
+    {
+      "name": "Hole",
+      "type": "String",
+      "default": "cond:drawing",
+      "display": false
+    },
+    {
+      "name": "Res",
+      "type": "String",
+      "default": "cond:drawing",
+      "display": false
+    },
+    {
+      "name": "Bond",
+      "type": "String",
+      "default": "cond:drawing",
+      "display": false
+    },
+    {
+      "name": "DielectricLossModel",
+      "type": "String",
+      "default": "Svensson/Djordjevic",
+      "display": false
+    },
+    {
+      "name": "FreqForEpsrTanD",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": false
+    },
+    {
+      "name": "LowFreqForTanD",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "k",
+      "unit": "Hz",
+      "display": false
+    },
+    {
+      "name": "HighFreqForTanD",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "T",
+      "unit": "Hz",
+      "display": false
+    },
+    {
+      "name": "RoughnessModel",
+      "type": "String",
+      "default": "Hammerstad",
+      "display": false
+    }
+  ],
+  "schematic": {
+    "netlist": {
+    }
+  },
+  "layout": {
+    "model": ""
+  },
+  "ugo": {
+    "model": "MSUB"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}

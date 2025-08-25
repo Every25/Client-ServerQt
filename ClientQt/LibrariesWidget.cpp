@@ -40,26 +40,60 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     setLayout(mainLayout);
     
     // Создание клиента
-    client = new Client(this);
-    client->url = QUrl("http://" + ip + ":" + QString::number(port));
+    //client = new Client(this);
+    //client->url = QUrl("http://" + ip + ":" + QString::number(port));
 
     //привязка сигналов
     connect(treeView, &QTreeView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
-    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
-    connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
+    //connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
+    //connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
     //привязка сигналов для кнопок
     connect(refreshButton, &QPushButton::clicked, this, &LibrariesWidget::refreshButtonClicked);
 
     //первое отправление запроса
-    client->sendRequest();
+    updateTree(readJson());
 }
 
 LibrariesWidget::~LibrariesWidget()
 {
    delete libraries;
    delete catalogs;
+}
+
+nlohmann::json LibrariesWidget::readJson() {
+
+    QFileInfo fileInfo(currentPath);
+
+    if (!fileInfo.exists()) {
+        //emit errorOccurred(QString(QStringLiteral(u"Resource not found")));
+        return nlohmann::json();
+    }
+
+    if (fileInfo.isDir()) {
+        QDir librariesDir(currentPath);
+        QStringList jsonFiles = librariesDir.entryList(QStringList() << "*.json", QDir::Files);
+
+        if (!jsonFiles.isEmpty()) {
+            QString jsonFilePath = librariesDir.filePath(jsonFiles.first());
+            QFile jsonFile(jsonFilePath);
+
+            if (jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QByteArray jsonContent = jsonFile.readAll();
+                nlohmann::json j = nlohmann::json::parse(jsonContent);
+                jsonFile.close();
+                return j;
+            }
+            else {
+                QMessageBox::warning(this, QStringLiteral(u"Ошибка при открытии json файла: "), jsonFilePath);
+            }
+        }
+        else {
+            QMessageBox::warning(this, "Ошибка", QStringLiteral(u"json файл не найден"));
+        }
+    }
+    return nlohmann::json();
 }
 
 void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
@@ -70,9 +104,9 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
     }
     foreach(const auto& lib, *libraries) {
         if (lib.name == selectedItem) {
-            QString fullPath = "/Libraries/" + lib.dir;
-            client->currentPath = fullPath;
-            client->sendRequest();
+            QString fullPath = "./Libraries/" + lib.dir;
+            currentPath = fullPath;
+            updateTree(readJson());
             currentLibrary = lib;
             return;
         }
@@ -95,7 +129,7 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
 //Обновление QTreeView после получения данных с сервера
 void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
 {
-    if (client->currentPath == "/Libraries")
+    if (currentPath == "./Libraries")
     {
         addJsonToModel(jsonData, root);
         return;
@@ -121,7 +155,10 @@ QString LibrariesWidget::getFullPath(QStandardItem* item)
 
 void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 {
-    parentItem->removeRows(0, parentItem->rowCount());
+    if (!firstRequest)
+    {
+        parentItem->removeRows(0, parentItem->rowCount());
+    }
         /*QString root_name = QString::fromStdString(jsonObj["name"].get<std::string>());
         root->setText(root_name);*/
 
@@ -188,7 +225,7 @@ void LibrariesWidget::handleError(const QString& errorString)
 
 void LibrariesWidget::refreshButtonClicked()
 {
-    client->sendRequest();
+    updateTree(readJson());
 }
 
 void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component& component)

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="13mm" height="12mm"
+viewBox="0 0 131 129">
+<title>microstrip_bends</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="41.00 80.29 53.13 80.29 53.13 72.21 71.43 72.21 71.43 51.68 80.42 51.68 80.42 41.00 80.42 51.68 90.24 51.68 90.24 72.21 74.07 88.37 53.13 88.37 53.13 80.29" fill="none" stroke="rgb(0,96,191)" stroke-width="2" />
+</svg>

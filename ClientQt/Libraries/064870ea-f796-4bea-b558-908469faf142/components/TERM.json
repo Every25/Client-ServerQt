@@ -1,0 +1,50 @@
+{
+  "library": "Basic/Ports",
+  "name": "TERM",
+  "model": "TERM",
+  "view_model": true,
+  "group": "STD",
+  "pins": [
+    "P1",
+    "P2"
+  ],
+  "parameters": [
+    {
+      "name": "Num",
+      "type": "Autoincrement",
+      "default": 1,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "Z",
+      "type": "Real",
+      "default": 50.0,
+      "factor": "",
+      "unit": "Ohm",
+      "display": true
+    },
+    {
+      "name": "Vdc",
+      "type": "Real",
+      "default": "",
+      "factor": "",
+      "unit": "V",
+      "display": false
+    }
+  ],
+  "schematic": {
+    "netlist": {
+    }
+  },
+  "layout": {
+    "model": "TERM_pins"
+  },
+  "ugo": {
+    "model": "TERM"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}
