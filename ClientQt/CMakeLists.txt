@@ -14,7 +14,7 @@ find_package(QT NAMES Qt5 REQUIRED COMPONENTS Widgets Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
 find_package(nlohmann_json CONFIG REQUIRED)
 
-file(GLOB SOURCES "*.cpp")
+file(GLOB SOURCES "*.cpp" "*.h")
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
 
 set(RESOURCES_FILE ${CMAKE_CURRENT_SOURCE_DIR}/icons)
