@@ -22,6 +22,7 @@ set(RESOURCES_FILE ${CMAKE_CURRENT_SOURCE_DIR}/icons)
 list(APPEND SOURCES ${RESOURCES_FILE})
 
 set(ICONS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/icons)
+set(LIBRARIES_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Libraries)
 
 # Цель для копирования папки icons в директорию сборки
 add_custom_target(copy_icons ALL
@@ -33,7 +34,7 @@ add_custom_target(copy_icons ALL
 
 add_custom_target(copy_libraries ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${ICONS_SOURCE_DIR}
+        ${LIBRARIES_SOURCE_DIR}
         $<TARGET_FILE_DIR:${PROJECT_NAME}>/Libraries
     COMMENT "Copying icons directory to output directory"
 )
