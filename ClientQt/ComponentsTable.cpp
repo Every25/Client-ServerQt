@@ -41,7 +41,8 @@ void ComponentsTable::updateComponents(const QList<Component>& components)
         insertRow(row);
 
         // Иконка (пока пустая ячейка)
-        setItem(row, 0, new QTableWidgetItem(""));
+        setItem(row, 0, new QTableWidgetItem());
+        item(row, 0) ->setIcon(component.thumb);
 
         // Модель
         setItem(row, 1, new QTableWidgetItem(component.model));

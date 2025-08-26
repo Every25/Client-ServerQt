@@ -5,6 +5,6 @@
 struct Component
 {
     QString model;
-    QString thumb;
+    QIcon thumb;
     QString desc;
 };

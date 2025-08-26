@@ -187,8 +187,19 @@ QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
 void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component& component)
 {
     component.model = QString::fromStdString(jsonObj["model"].get<std::string>());
-    component.thumb = QString::fromStdString(jsonObj["thumb"].get<std::string>());
     component.desc = QString::fromStdString(jsonObj["desc"].get<std::string>());
+
+    QIcon icon;
+    if (jsonObj["thumb"] != "")
+    {
+        iconPath = "./Libraries/" + currentLibrary.dir + "/" + currentLibrary.thumbnails_location + "/" + QString::fromStdString(jsonObj["thumb"].get<std::string>()) + ".svg";
+        if (QFile::exists(iconPath))
+        {
+            icon = QIcon(iconPath);
+            component.thumb = icon;
+        }
+    }
+
 }
 
 void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem)
