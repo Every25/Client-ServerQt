@@ -41,6 +41,7 @@ private:
     QList<Library>* libraries;
     QList<Catalog>* catalogs;
     QString currentPath = "./Libraries";
+    QString iconPath;
 
     void addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     void addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);

@@ -26,6 +26,7 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     treeView->setHeaderHidden(true);
     treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     treeView->installEventFilter(this);
+    treeView->setIconSize(QSize(64, 64));
 
     //создание и добавление кнопок
     refreshButton = new QPushButton(QIcon("icons/refresh.svg"), "", this);
@@ -196,9 +197,24 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
     catalog.thumb = QString::fromStdString(jsonObj["thumb"].get<std::string>());
 
     catalog.item = new QStandardItem(catalog.name);
-
-
-
+    QIcon icon;
+    if (catalog.thumb != "")
+    {
+        iconPath = "./Libraries/" + currentLibrary.dir + "/" + currentLibrary.thumbnails_location + "/" + catalog.thumb + ".svg";
+        if (QFile::exists(iconPath)) 
+        {
+            icon = QIcon(iconPath);
+        }
+        else 
+        {
+            icon = QIcon::fromTheme("folder");
+        }
+    }
+    else
+    {
+        icon = QIcon::fromTheme("folder");
+    }
+    catalog.item->setIcon(icon);
     if (parentItem) {
         parentItem->appendRow(catalog.item);
     }
