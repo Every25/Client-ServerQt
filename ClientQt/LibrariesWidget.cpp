@@ -10,6 +10,8 @@
 QString ip = "127.0.0.1";
 //QString ip = "10.0.1.118";
 int port = 8080;
+QSize iconSize(128, 128);
+QIcon defaultFolder = QIcon("./icons/folder.svg");
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
     : QWidget(parent)
@@ -26,20 +28,20 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     treeView->setHeaderHidden(true);
     treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     treeView->installEventFilter(this);
-    treeView->setIconSize(QSize(64, 64));
+    treeView->setIconSize(iconSize);
 
     //создание и добавление кнопок
     refreshButton = new QPushButton(QIcon("icons/refresh.svg"), "", this);
     buttonLayout->addWidget(refreshButton);
     
     componentsTable = new ComponentsTable(this);  
-
+    componentsTable->setIconSize(iconSize);
 
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     splitter->addWidget(treeView);
     splitter->addWidget(componentsTable); 
 
-    splitter->setSizes({ 400, 400 });
+    splitter->setSizes({400, 400 });
 
     mainLayout->addLayout(buttonLayout);
     mainLayout->addWidget(splitter);
@@ -146,7 +148,7 @@ void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardIte
             library.ver = lib["ver"].get<double>();
 
             library.item = new QStandardItem(library.name);
-            library.item->setIcon(QIcon::fromTheme("folder"));
+            library.item->setIcon(defaultFolder);
 
             QStandardItem* dummyChild = new QStandardItem(" ");
             library.item->appendRow(dummyChild);
@@ -192,24 +194,6 @@ QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
     return QIcon(pixmap);
 }
 
-void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component& component)
-{
-    component.model = QString::fromStdString(jsonObj["model"].get<std::string>());
-    component.desc = QString::fromStdString(jsonObj["desc"].get<std::string>());
-
-    QIcon icon;
-    if (jsonObj["thumb"] != "")
-    {
-        iconPath = "./Libraries/" + currentLibrary.dir + "/" + currentLibrary.thumbnails_location + "/" + QString::fromStdString(jsonObj["thumb"].get<std::string>()) + ".svg";
-        if (QFile::exists(iconPath))
-        {
-            icon = QIcon(iconPath);
-            component.thumb = icon;
-        }
-    }
-
-}
-
 void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem)
 {
     catalog.name = QString::fromStdString(jsonObj["name"].get<std::string>());
@@ -226,12 +210,12 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
         }
         else 
         {
-            icon = QIcon::fromTheme("folder");
+            icon = defaultFolder;
         }
     }
     else
     {
-        icon = QIcon::fromTheme("folder");
+        icon = defaultFolder;
     }
     catalog.item->setIcon(icon);
     if (parentItem) {
@@ -258,6 +242,22 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
     catalogs->push_back(catalog);
 }
 
+void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component& component)
+{
+    component.model = QString::fromStdString(jsonObj["model"].get<std::string>());
+    component.desc = QString::fromStdString(jsonObj["desc"].get<std::string>());
+
+    QIcon icon;
+    if (jsonObj["thumb"] != "")
+    {
+        iconPath = "./Libraries/" + currentLibrary.dir + "/" + currentLibrary.thumbnails_location + "/" + QString::fromStdString(jsonObj["thumb"].get<std::string>()) + ".svg";
+        if (QFile::exists(iconPath))
+        {
+            icon = QIcon(iconPath);
+            component.thumb = icon;
+        }
+    }
+}
 
 nlohmann::json LibrariesWidget::readJson() {
 
