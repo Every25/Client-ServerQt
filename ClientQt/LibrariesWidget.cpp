@@ -10,7 +10,7 @@
 QString ip = "127.0.0.1";
 //QString ip = "10.0.1.118";
 int port = 8080;
-QSize iconSize(128, 128);
+QSize iconSize(64, 64);
 QIcon defaultFolder = QIcon("./icons/folder.svg");
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
