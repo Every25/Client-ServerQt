@@ -55,7 +55,7 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     //client->url = QUrl("http://" + ip + ":" + QString::number(port));
 
     //привязка сигналов
-    connect(treeView, &QTreeView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
+    connect(treeView, &QTreeView::clicked, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
     //connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
     //connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
