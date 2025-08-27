@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 #include <QString>
 #include <QMessageBox>
-
+#include <QSplitter>
 
 
 QString ip = "127.0.0.1";
@@ -34,9 +34,17 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     
     componentsTable = new ComponentsTable(this);  
 
+
+    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    splitter->addWidget(treeView);
+    splitter->addWidget(componentsTable); 
+
+    splitter->setSizes({ 400, 400 });
+
     mainLayout->addLayout(buttonLayout);
-    mainLayout->addWidget(treeView);
-    mainLayout->addWidget(componentsTable);
+    mainLayout->addWidget(splitter);
+    //mainLayout->addWidget(treeView);
+    //mainLayout->addWidget(componentsTable);
 
     setLayout(mainLayout);
     
