@@ -26,5 +26,5 @@ private:
         const QByteArray& content = QByteArray(),
         const QString& contentType = "text/plain") const;
     void handlePathChange(const QUrlQuery& query);
-    //QString getIcon(const QString& iconPath, const QString& iconName) const;
+    QByteArray generateJsonFromFolder() const;
 };

@@ -16,25 +16,6 @@ HttpRequestHandler::HttpRequestHandler(const QString& basePath, QObject* parent)
     }
 }
 
-//QString HttpRequestHandler::getIcon(const QString& thumbnailsTocation, const QString& iconName) const
-//{
-//    QString iconPath = QString("./icons/%1.svg").arg(iconName);
-//    QFile iconFile(iconPath);
-//
-//    if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//        qInfo() << "Failed to open icon file:" << iconPath;
-//        iconPath = QString("./icons/unknown.svg");
-//        iconFile.setFileName(iconPath);
-//        if (!iconFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//            qCritical() << "Failed to open unknown icon file:" << iconPath;
-//            return QString();
-//        }
-//    }
-//
-//    return QString::fromUtf8(iconFile.readAll());
-//}
-
-
 void HttpRequestHandler::handleRequest()
 {
     QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
@@ -49,9 +30,9 @@ void HttpRequestHandler::handleRequest()
         if (request.startsWith("GET")) {
             processGetRequest(request);
             QFileInfo fileInfo(currentPath);
-
+            QByteArray iconContent;
             if (!fileInfo.exists()) {
-                sendResponse(socket, "404 Not Found", "Resource not found");
+                qWarning() << "The directory does not exist:" << currentPath;
                 return;
             }
 
@@ -75,6 +56,8 @@ void HttpRequestHandler::handleRequest()
                 }
                 else {
                     qWarning() << "No JSON files found in folder";
+                    QByteArray generatedJson = generateJsonFromFolder();
+                    sendResponse(socket, "200 OK", generatedJson, "icon/");
                 }
             }
         }
@@ -84,6 +67,39 @@ void HttpRequestHandler::handleRequest()
         sendResponse(socket, "500 Internal Server Error", "Server error occurred");
     }
 }
+
+QByteArray HttpRequestHandler::generateJsonFromFolder() const
+{
+    QDir dir(currentPath);
+    nlohmann::json jsonResponse;
+    nlohmann::json filesArray = nlohmann::json::array();
+
+    QStringList files = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+
+    foreach(const QString & fileName, files) {
+        QString filePath = dir.filePath(fileName);
+        QFile file(filePath);
+
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            nlohmann::json fileEntry;
+
+            fileEntry["name"] = fileName.toStdString();
+
+            QString content = QString::fromUtf8(file.readAll());
+            std::string contentStr = content.toStdString();
+            fileEntry["content"] = contentStr;
+
+            filesArray.push_back(fileEntry);
+            file.close();
+        }
+    }
+
+    jsonResponse["files"] = filesArray;
+
+    return QByteArray::fromStdString(jsonResponse.dump());
+}
+
+
 
 void HttpRequestHandler::processGetRequest(const QString& request)
 {
@@ -111,9 +127,9 @@ void HttpRequestHandler::handlePathChange(const QUrlQuery& query)
         }
         QString newPath = "./" + folderName;
 
-        if (QDir(newPath).exists()) {
+        //if (QDir(newPath).exists()) {
             currentPath = newPath;
-        }
+        //}
     }
 }
 

@@ -19,7 +19,7 @@ protected:
     void incomingConnection(qintptr handle) override;
 
 private:
-    const QString basePath = "./home";
+    const QString basePath = "./Libraries";
     HttpRequestHandler* requestHandler;
 
 private slots:
