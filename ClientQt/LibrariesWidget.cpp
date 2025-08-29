@@ -6,10 +6,6 @@
 #include <QMessageBox>
 #include <QSplitter>
 
-
-QString ip = "127.0.0.1";
-//QString ip = "10.0.1.118";
-int port = 8080;
 QSize iconSize(64, 64);
 QIcon defaultFolder = QIcon("./icons/folder.svg");
 
@@ -45,20 +41,12 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
 
     mainLayout->addLayout(buttonLayout);
     mainLayout->addWidget(splitter);
-    //mainLayout->addWidget(treeView);
-    //mainLayout->addWidget(componentsTable);
 
     setLayout(mainLayout);
-    
-    // Создание клиента
-    //client = new Client(this);
-    //client->url = QUrl("http://" + ip + ":" + QString::number(port));
 
     //привязка сигналов
     connect(treeView, &QTreeView::clicked, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
-    //connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
-    //connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
     //привязка сигналов для кнопок
     connect(refreshButton, &QPushButton::clicked, this, &LibrariesWidget::refreshButtonClicked);
@@ -85,19 +73,21 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
             currentPath = fullPath;
             currentLibrary = lib;
             updateTree(readJson());
+            componentsTable->setRowCount(0);
             return;
         }
     }
-    foreach(const auto& cat, *catalogs)
+    foreach(const auto& catalog, *catalogs)
     {
-        if (cat.name == selectedItem) {
-            currentCatalog = cat;
+        if (catalog.name == selectedItem) {
+            currentCatalog = catalog;
             //Обновление данных компонентов таблицы
             if (!currentCatalog.components.isEmpty())
             {
                 componentsTable->updateComponents(currentCatalog.components);
                 return;
             }
+            componentsTable->setRowCount(0);
             return;
         }
     }
@@ -108,35 +98,17 @@ void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
 {
     if (currentPath == "./Libraries")
     {
-        addJsonToModel(jsonData, root);
+        addRootJsonToModel(jsonData, root);
         return;
     }
     addLibraryToModel(jsonData, currentLibrary.item);
 }
 
-QString LibrariesWidget::getFullPath(QStandardItem* item)
-{
-    QStringList pathComponents;
-    QStandardItem* current = item;
-
-    while (current != nullptr)
-    {
-        QString name = current->text();
-        if (name != " ")
-            pathComponents.prepend(name);
-        current = current->parent();
-    }
-
-    return "/" + pathComponents.join("/");
-}
-
-void LibrariesWidget::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
+void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 {
     if (!firstRequest)
     {
         parentItem->removeRows(0, parentItem->rowCount());
-        /*QString root_name = QString::fromStdString(jsonObj["name"].get<std::string>());
-        root->setText(root_name);*/
     }
 
     if (jsonObj.contains("libraries") && jsonObj["libraries"].is_array())
@@ -176,22 +148,6 @@ void LibrariesWidget::addLibraryToModel(const nlohmann::json& jsonObj, QStandard
             CatalogFromJson(catalogJson, catalog, parentItem);
         }
     }
-}
-
-QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
-{
-    QByteArray svgData = svgString.toUtf8();
-    QSvgRenderer renderer(svgData);
-
-    // Размер иконки
-    int iconSize = 64;
-
-    QPixmap pixmap(iconSize, iconSize);
-    pixmap.fill(Qt::transparent);
-    QPainter painter(&pixmap);
-    renderer.render(&painter);
-
-    return QIcon(pixmap);
 }
 
 void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem)
@@ -293,12 +249,8 @@ nlohmann::json LibrariesWidget::readJson() {
     return nlohmann::json();
 }
 
-void LibrariesWidget::handleError(const QString& errorString)
-{
-    QMessageBox::warning(this, QStringLiteral(u"Ошибка при получении данных: "), errorString);
-}
-
 void LibrariesWidget::refreshButtonClicked()
 {
     updateTree(readJson());
+    componentsTable->setRowCount(0);
 }

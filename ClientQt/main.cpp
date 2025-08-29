@@ -1,5 +1,4 @@
 ﻿#include "LibrariesWidget.h"
-#include "Client.h"
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])

@@ -100,8 +100,6 @@
   <ItemGroup>
     <QtRcc Include="ClientQt.qrc" />
     <QtUic Include="ClientQt.ui" />
-    <QtMoc Include="Client.h" />
-    <ClCompile Include="Client.cpp" />
     <ClCompile Include="ComponentsTable.cpp" />
     <ClCompile Include="LibrariesWidget.cpp" />
     <ClCompile Include="main.cpp" />

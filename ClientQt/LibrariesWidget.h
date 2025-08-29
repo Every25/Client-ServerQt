@@ -1,5 +1,5 @@
 ﻿#pragma once
-//#include "Client.h"
+
 #include <Library.h>
 #include <Catalog.h>
 #include <Component.h>
@@ -33,7 +33,6 @@ private:
     ComponentsTable* componentsTable;
     QStandardItemModel* model;
     QStandardItem* root;
-    //Client* client;
     QPushButton* refreshButton;
     Library currentLibrary;
     Catalog currentCatalog;
@@ -43,17 +42,14 @@ private:
     QString currentPath = "./Libraries";
     QString iconPath;
 
-    void addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
+    void addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     void addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
-    QIcon convertSvgToIcon(QString svgString);
-    QString getFullPath(QStandardItem* item);
     void ComponentFromJson(const nlohmann::json& j, Component& component);
     void CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem);
     nlohmann::json readJson();
 
 public slots:
     void updateTree(const nlohmann::json& jsonData);
-    void handleError(const QString& errorString);
     void RequestWithSelectedItem(const QModelIndex& index);
     void refreshButtonClicked();
 };
