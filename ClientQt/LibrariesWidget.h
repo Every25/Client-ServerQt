@@ -34,8 +34,6 @@ private:
     QStandardItemModel* model;
     QStandardItem* root;
     QPushButton* refreshButton;
-    Library currentLibrary;
-    Catalog currentCatalog;
     bool firstRequest = true;
     QList<Library>* libraries;
     QList<Catalog>* catalogs;
