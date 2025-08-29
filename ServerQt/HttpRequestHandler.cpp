@@ -72,7 +72,7 @@ QByteArray HttpRequestHandler::generateJsonFromFolder() const
 {
     QDir dir(currentPath);
     nlohmann::json jsonResponse;
-    nlohmann::json filesArray = nlohmann::json::array();
+    jsonResponse["files"] = nlohmann::json::array();
 
     QStringList files = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
 
@@ -81,22 +81,25 @@ QByteArray HttpRequestHandler::generateJsonFromFolder() const
         QFile file(filePath);
 
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            nlohmann::json fileEntry;
+            QByteArray iconContent = file.readAll();
+            std::string iconContentStr = iconContent.toStdString();
+            QString baseName = fileName.left(fileName.lastIndexOf('.'));
+            jsonResponse["files"].push_back({ {"name", baseName.toStdString()},{"content",iconContentStr}
+        });
 
-            fileEntry["name"] = fileName.toStdString();
-
-            QString content = QString::fromUtf8(file.readAll());
-            std::string contentStr = content.toStdString();
-            fileEntry["content"] = contentStr;
-
-            filesArray.push_back(fileEntry);
             file.close();
         }
     }
 
-    jsonResponse["files"] = filesArray;
 
-    return QByteArray::fromStdString(jsonResponse.dump());
+
+    // Преобразуем JSON в QByteArray безопасным способом
+    std::string jsonStr = jsonResponse.dump();
+    QByteArray result = QByteArray::fromStdString(jsonStr);
+
+
+
+    return result;
 }
 
 
