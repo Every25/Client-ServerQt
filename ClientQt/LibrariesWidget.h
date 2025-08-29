@@ -34,9 +34,6 @@ private:
     QPushButton* refreshButton;
     QString currentPath = "/Libraries";
     QString iconPath;
-    QIcon currentIcon;
-    Library* currentLibrary;
-    Catalog* currentCatalog;
     bool firstRequest = true;
     QList<Library>* libraries;
     QList<Catalog>* catalogs;

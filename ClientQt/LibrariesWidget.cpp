@@ -13,6 +13,9 @@ QString ip = "127.0.0.1";
 int port = 8080;
 QIcon defaultFolder = QIcon("icons/folder.svg");
 QSize iconSize(64, 64);
+QIcon currentIcon;
+Library* currentLibrary = nullptr;
+Catalog* currentCatalog = nullptr;
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
     : QWidget(parent)
@@ -22,8 +25,6 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     auto buttonLayout = new QHBoxLayout(this);
     libraries = new QList<Library>;
     catalogs = new QList<Catalog>;
-    currentLibrary = nullptr;
-    currentCatalog = nullptr;
 
     treeView = new QTreeView(this);
     model = new QStandardItemModel(this);
