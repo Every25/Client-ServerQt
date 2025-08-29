@@ -7,8 +7,9 @@
 #include <QSplitter>
 
 
-//QString ip = "127.0.0.1";
-QString ip = "10.0.1.118";
+QString ip = "127.0.0.1";
+//QString ip = "10.0.1.118";
+
 int port = 8080;
 QIcon defaultFolder = QIcon("icons/folder.svg");
 QSize iconSize(64, 64);
@@ -16,10 +17,13 @@ QSize iconSize(64, 64);
 LibrariesWidget::LibrariesWidget(QWidget* parent)
     : QWidget(parent)
 {
+
     auto mainLayout = new QVBoxLayout(this);
     auto buttonLayout = new QHBoxLayout(this);
     libraries = new QList<Library>;
     catalogs = new QList<Catalog>;
+    currentLibrary = nullptr;
+    currentCatalog = nullptr;
 
     treeView = new QTreeView(this);
     model = new QStandardItemModel(this);
@@ -45,8 +49,6 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
 
     mainLayout->addLayout(buttonLayout);
     mainLayout->addWidget(splitter);
-    /*mainLayout->addWidget(treeView);
-    mainLayout->addWidget(componentsTable);*/
 
     setLayout(mainLayout);
     
@@ -80,25 +82,27 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
     if (!index.isValid()) {
         return;
     }
-    foreach(const auto& lib, *libraries) {
+    for (auto& lib : *libraries) {
         if (lib.name == selectedItem) {
             QString fullPath = "/Libraries/" + lib.dir;
             currentPath = fullPath;
             client->sendRequest(currentPath);
-            currentLibrary = lib;
+            currentLibrary = &lib;
+            componentsTable->setRowCount(0);
             return;
         }
     }
-    foreach(const auto& cat, *catalogs)
+    for (auto& catalog : *catalogs)
     {
-        if (cat.name == selectedItem) {
-            currentCatalog = cat;
+        if (catalog.name == selectedItem) {
+            currentCatalog = &catalog;
             //Обновление данных компонентов таблицы
-            if (!currentCatalog.components.isEmpty())
+            if (!currentCatalog->components.isEmpty())
             {
-                componentsTable->updateComponents(currentCatalog.components);
+                componentsTable->updateComponents(currentCatalog->components);
                 return;
             }
+            componentsTable->setRowCount(0);
             return;
         }
     }
@@ -112,7 +116,7 @@ void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
         addRootJsonToModel(jsonData, root);
         return;
     }
-    addLibraryToModel(jsonData, currentLibrary.item);
+    addLibraryToModel(jsonData, currentLibrary->item);
 }
 
 void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
@@ -120,83 +124,73 @@ void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandar
     if (firstRequest)
     {
         parentItem->removeRows(0, parentItem->rowCount());
-    }
-    if (jsonObj.contains("libraries") && jsonObj["libraries"].is_array())
-    {
-        for (const auto& lib : jsonObj["libraries"]) {
-            Library library;
-            library.name = QString::fromStdString(lib["name"].get<std::string>());
-            library.dir = QString::fromStdString(lib["dir"].get<std::string>());
-            library.ver = lib["ver"].get<double>();
+        if (jsonObj.contains("libraries") && jsonObj["libraries"].is_array())
+        {
+            for (const auto& lib : jsonObj["libraries"]) {
+                Library library;
+                library.name = QString::fromStdString(lib["name"].get<std::string>());
+                library.dir = QString::fromStdString(lib["dir"].get<std::string>());
+                library.ver = lib["ver"].get<double>();
 
-            library.item = new QStandardItem(library.name);
-            library.item->setIcon(defaultFolder);
+                library.item = new QStandardItem(library.name);
+                library.item->setIcon(defaultFolder);
 
-            QStandardItem* dummyChild = new QStandardItem(" ");
-            library.item->appendRow(dummyChild);
+                QStandardItem* dummyChild = new QStandardItem(" ");
+                library.item->appendRow(dummyChild);
 
-            parentItem->appendRow(library.item);
-            libraries->append(library);
+                parentItem->appendRow(library.item);
+                libraries->append(library);
+            }
         }
+        firstRequest = false;
     }
-    firstRequest = false;
 }
 
 void LibrariesWidget::addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
 {
     parentItem->removeRows(0, parentItem->rowCount());
-    currentLibrary.components_location = QString::fromStdString(jsonObj["components_location"].get<std::string>());
-    currentLibrary.layouts_location = QString::fromStdString(jsonObj["layouts_location"].get<std::string>());
-    currentLibrary.sparam_location = QString::fromStdString(jsonObj["sparam_location"].get<std::string>());
-    currentLibrary.symbols_location = QString::fromStdString(jsonObj["symbols_location"].get<std::string>());
-    currentLibrary.thumbnails_location = QString::fromStdString(jsonObj["thumbnails_location"].get<std::string>());
-    currentLibrary.ugos_location = QString::fromStdString(jsonObj["ugos_location"].get<std::string>());
-    currentLibrary.veriloga_location = QString::fromStdString(jsonObj["veriloga_location"].get<std::string>());
+    currentLibrary->components_location = QString::fromStdString(jsonObj["components_location"].get<std::string>());
+    currentLibrary->layouts_location = QString::fromStdString(jsonObj["layouts_location"].get<std::string>());
+    currentLibrary->sparam_location = QString::fromStdString(jsonObj["sparam_location"].get<std::string>());
+    currentLibrary->symbols_location = QString::fromStdString(jsonObj["symbols_location"].get<std::string>());
+    currentLibrary->thumbnails_location = QString::fromStdString(jsonObj["thumbnails_location"].get<std::string>());
+    currentLibrary->ugos_location = QString::fromStdString(jsonObj["ugos_location"].get<std::string>());
+    currentLibrary->veriloga_location = QString::fromStdString(jsonObj["veriloga_location"].get<std::string>());
     if (jsonObj.contains("catalogs") && jsonObj["catalogs"].is_array()) {
         for (const auto& catalogJson : jsonObj["catalogs"]) {
             Catalog catalog;
             CatalogFromJson(catalogJson, catalog, parentItem);
         }
     }
-    iconPath = "/Libraries/" + currentLibrary.dir + "/" + currentLibrary.thumbnails_location;
+
+    iconPath = "/Libraries/" + currentLibrary->dir + "/" + currentLibrary->thumbnails_location;
     client->sendRequest(iconPath);
-}
-
-QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
-{
-    QByteArray svgData = svgString.toUtf8();
-    QSvgRenderer renderer(svgData);
-
-    // Размер иконки
-    int iconSize = 64;
-
-    QPixmap pixmap(iconSize, iconSize);
-    pixmap.fill(Qt::transparent);
-    QPainter painter(&pixmap);
-    renderer.render(&painter);
-
-    return QIcon(pixmap);
 }
 
 void LibrariesWidget::iconsFromJson(const nlohmann::json& jsonObj)
 {
     QString content;
+    QString name;
     if (jsonObj.contains("files") && jsonObj["files"].is_array()) {
-        for (const auto& file : jsonObj["files"]) {
-            foreach(const auto& catalog, *catalogs)
+        for (auto& file : jsonObj["files"]) {
+            for (auto& catalog : *catalogs)
             {
-                if (catalog.thumb == QString::fromStdString(jsonObj["thumb"].get<std::string>())) {
-                    currentCatalog = catalog;
-                    content = QString::fromStdString(jsonObj["content"].get<std::string>());
-                    if (content != "")
+                name = QString::fromStdString(file["name"].get<std::string>());
+                if (catalog.thumb == name) {
+                    currentCatalog = &catalog;
+                    content = QString::fromStdString(file["content"].get<std::string>());
+                    currentIcon = convertSvgToIcon(content);
+                    currentCatalog->item->setIcon(currentIcon);
+                }
+                if (!catalog.components.isEmpty())
+                {
+                    for (auto& component : catalog.components)
                     {
-                        currentIcon = convertSvgToIcon(content);
+                        name = QString::fromStdString(file["name"].get<std::string>());
+                        if (component.thumb == name) {
+                            component.thumb = QString::fromStdString(file["content"].get<std::string>());
+                        }
                     }
-                    else
-                    {
-                        currentIcon = defaultFolder;
-                    }
-                    currentCatalog.item->setIcon(currentIcon);
                 }
             }
         }
@@ -209,6 +203,7 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
     catalog.thumb = QString::fromStdString(jsonObj["thumb"].get<std::string>());
 
     catalog.item = new QStandardItem(catalog.name);
+    catalog.item->setIcon(defaultFolder);
 
     if (parentItem) {
         parentItem->appendRow(catalog.item);
@@ -249,4 +244,5 @@ void LibrariesWidget::handleError(const QString& errorString)
 void LibrariesWidget::refreshButtonClicked()
 {
     client->sendRequest(currentPath);
+    componentsTable->setRowCount(0);
 }

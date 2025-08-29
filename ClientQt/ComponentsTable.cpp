@@ -1,5 +1,6 @@
 ﻿#include "ComponentsTable.h"
 #include "LibrariesWidget.h"
+#include "convertSvgToIcon.h"
 
 ComponentsTable::ComponentsTable(QWidget* parent)
     : QTableWidget(parent)
@@ -12,7 +13,7 @@ void ComponentsTable::setupTable()
     setColumnCount(3);
 
     QStringList headers;
-    headers << "" << "Models" << "Description";
+    headers << "Symbol" << "Model" << "Description";
     setHorizontalHeaderLabels(headers);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -20,6 +21,7 @@ void ComponentsTable::setupTable()
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAlternatingRowColors(true);
     setShowGrid(false);
+    verticalHeader()->setVisible(false);
 
     horizontalHeader()->setStretchLastSection(true);
     horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
@@ -41,7 +43,8 @@ void ComponentsTable::updateComponents(const QList<Component>& components)
         insertRow(row);
 
         // Иконка (пока пустая ячейка)
-        setItem(row, 0, new QTableWidgetItem(""));
+        setItem(row, 0, new QTableWidgetItem());
+        item(row, 0)->setIcon(convertSvgToIcon(component.thumb));
 
         // Модель
         setItem(row, 1, new QTableWidgetItem(component.model));

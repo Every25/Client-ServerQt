@@ -1,8 +1,9 @@
 ﻿#pragma once
-#include "Client.h"
+#include <Client.h>
 #include <Library.h>
 #include <Catalog.h>
 #include <Component.h>
+#include <convertSvgToIcon.h>
 
 #include <QWidget>
 #include <QTreeView>
@@ -11,9 +12,6 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <nlohmann/json.hpp>
-#include <QSvgRenderer>
-#include <QPixmap>
-#include <QPainter>
 #include <QList>
 #include "ComponentsTable.h"
 
@@ -37,15 +35,14 @@ private:
     QString currentPath = "/Libraries";
     QString iconPath;
     QIcon currentIcon;
-    Library currentLibrary;
-    Catalog currentCatalog;
+    Library* currentLibrary;
+    Catalog* currentCatalog;
     bool firstRequest = true;
     QList<Library>* libraries;
     QList<Catalog>* catalogs;
 
     void addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     void addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
-    QIcon convertSvgToIcon(QString svgString);
     void ComponentFromJson(const nlohmann::json& j, Component& component);
     void CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem);
 
