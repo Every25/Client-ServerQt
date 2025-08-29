@@ -116,7 +116,10 @@ void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
         addRootJsonToModel(jsonData, root);
         return;
     }
-    addLibraryToModel(jsonData, currentLibrary->item);
+    if (currentLibrary->components_location.isEmpty())
+    {
+        addLibraryToModel(jsonData, currentLibrary->item);
+    }
 }
 
 void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
