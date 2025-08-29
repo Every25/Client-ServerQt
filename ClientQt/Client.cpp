@@ -12,10 +12,10 @@ Client::Client(QObject* parent) : QObject(parent) {
 Client::~Client()
 {}
 
-void Client::sendRequest() {
+void Client::sendRequest(QString path) {
 
-    if (!currentPath.isEmpty()) {
-        query.addQueryItem("path", currentPath);
+    if (!path.isEmpty()) {
+        query.addQueryItem("path", path);
     }
     url.setQuery(query.toString());
     manager->get(QNetworkRequest(url));
@@ -35,12 +35,10 @@ void Client::onFinished(QNetworkReply* reply)
     QByteArray responseData = reply->readAll();
     std::string responseStr = std::string(responseData);
     QStandardItem* node = new QStandardItem();
-
+    json j;
     try {
         // Парсинг JSON с помощью nlohmann
-        json j = json::parse(responseStr);
-        emit dataReceived(j);
-        //addJsonToModel(j, node);
+        j = json::parse(responseStr);
     }
     catch (const std::exception& e) {
         emit errorOccurred(QString(QStringLiteral(u"Ошибка парсинга JSON: %1")).arg(e.what()));
@@ -48,25 +46,16 @@ void Client::onFinished(QNetworkReply* reply)
         delete node;
         return;
     }
-
-    //emit dataReceived(node);
+    QString contentType = reply->header(QNetworkRequest::ContentTypeHeader).toString();
+    if (contentType.startsWith("application/json")) {
+            emit jsonReceived(j);
+    }
+    else if (contentType.startsWith("icon/")) {
+        emit iconReceived(j);
+    }
+    else {
+        emit errorOccurred(QString(QStringLiteral(u"Неизвестный тип данных")));
+        reply->deleteLater();
+    }
     reply->deleteLater();
 }
-
-//// Функция для добавления элементов из JSON
-//void Client::addJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
-//{
-//    if (jsonObj.contains("files") && jsonObj["files"].is_array())
-//    {
-//        auto files = jsonObj["files"];
-//        for (auto& file : files)
-//        {
-//            QStandardItem* name = new QStandardItem(file["name"].get<std::string>().c_str());
-//            parentItem->appendRow(name);
-//
-//            /*QStandardItem* icon = new QStandardItem(file["icon"].get<std::string>().c_str());
-//            parentItem->appendRow(icon);*/
-//        }
-//    }
-//
-//}

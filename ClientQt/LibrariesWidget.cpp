@@ -4,12 +4,14 @@
 #include <QHBoxLayout>
 #include <QString>
 #include <QMessageBox>
+#include <QSplitter>
 
 
-
-QString ip = "127.0.0.1";
-//QString ip = "10.0.1.118";
+//QString ip = "127.0.0.1";
+QString ip = "10.0.1.118";
 int port = 8080;
+QIcon defaultFolder = QIcon("icons/folder.svg");
+QSize iconSize(64, 64);
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
     : QWidget(parent)
@@ -26,16 +28,25 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     treeView->setHeaderHidden(true);
     treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     treeView->installEventFilter(this);
+    treeView->setIconSize(iconSize);
 
     //создание и добавление кнопок
     refreshButton = new QPushButton(QIcon("icons/refresh.svg"), "", this);
     buttonLayout->addWidget(refreshButton);
     
     componentsTable = new ComponentsTable(this);  
+    componentsTable->setIconSize(iconSize);
+
+    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    splitter->addWidget(treeView);
+    splitter->addWidget(componentsTable);
+
+    splitter->setSizes({400, 400});
 
     mainLayout->addLayout(buttonLayout);
-    mainLayout->addWidget(treeView);
-    mainLayout->addWidget(componentsTable);
+    mainLayout->addWidget(splitter);
+    /*mainLayout->addWidget(treeView);
+    mainLayout->addWidget(componentsTable);*/
 
     setLayout(mainLayout);
     
@@ -44,16 +55,17 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     client->url = QUrl("http://" + ip + ":" + QString::number(port));
 
     //привязка сигналов
-    connect(treeView, &QTreeView::doubleClicked, this, &LibrariesWidget::RequestWithSelectedItem);
+    connect(treeView, &QTreeView::clicked, this, &LibrariesWidget::RequestWithSelectedItem);
     connect(treeView, &QTreeView::expanded, this, &LibrariesWidget::RequestWithSelectedItem);
-    connect(client, &Client::dataReceived, this, &LibrariesWidget::updateTree);
+    connect(client, &Client::jsonReceived, this, &LibrariesWidget::updateTree);
+    connect(client, &Client::iconReceived, this, &LibrariesWidget::iconsFromJson);
     connect(client, &Client::errorOccurred,this, &LibrariesWidget::handleError);
 
     //привязка сигналов для кнопок
     connect(refreshButton, &QPushButton::clicked, this, &LibrariesWidget::refreshButtonClicked);
 
     //первое отправление запроса
-    client->sendRequest();
+    client->sendRequest(currentPath);
 }
 
 LibrariesWidget::~LibrariesWidget()
@@ -71,8 +83,8 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
     foreach(const auto& lib, *libraries) {
         if (lib.name == selectedItem) {
             QString fullPath = "/Libraries/" + lib.dir;
-            client->currentPath = fullPath;
-            client->sendRequest();
+            currentPath = fullPath;
+            client->sendRequest(currentPath);
             currentLibrary = lib;
             return;
         }
@@ -95,28 +107,12 @@ void LibrariesWidget::RequestWithSelectedItem(const QModelIndex& index)
 //Обновление QTreeView после получения данных с сервера
 void LibrariesWidget::updateTree(const nlohmann::json& jsonData)
 {
-    if (client->currentPath == "/Libraries")
+    if (currentPath == "/Libraries")
     {
-        addJsonToModel(jsonData, root);
+        addRootJsonToModel(jsonData, root);
         return;
     }
     addLibraryToModel(jsonData, currentLibrary.item);
-}
-
-QString LibrariesWidget::getFullPath(QStandardItem* item)
-{
-    QStringList pathComponents;
-    QStandardItem* current = item;
-
-    while (current != nullptr)
-    {
-        QString name = current->text();
-        if (name != " ")
-            pathComponents.prepend(name);
-        current = current->parent();
-    }
-
-    return "/" + pathComponents.join("/");
 }
 
 void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem)
@@ -124,8 +120,6 @@ void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandar
     if (firstRequest)
     {
         parentItem->removeRows(0, parentItem->rowCount());
-        /*QString root_name = QString::fromStdString(jsonObj["name"].get<std::string>());
-        root->setText(root_name);*/
     }
     if (jsonObj.contains("libraries") && jsonObj["libraries"].is_array())
     {
@@ -136,7 +130,7 @@ void LibrariesWidget::addRootJsonToModel(const nlohmann::json& jsonObj, QStandar
             library.ver = lib["ver"].get<double>();
 
             library.item = new QStandardItem(library.name);
-            library.item->setIcon(QIcon::fromTheme("folder"));
+            library.item->setIcon(defaultFolder);
 
             QStandardItem* dummyChild = new QStandardItem(" ");
             library.item->appendRow(dummyChild);
@@ -164,6 +158,8 @@ void LibrariesWidget::addLibraryToModel(const nlohmann::json& jsonObj, QStandard
             CatalogFromJson(catalogJson, catalog, parentItem);
         }
     }
+    iconPath = "/Libraries/" + currentLibrary.dir + "/" + currentLibrary.thumbnails_location;
+    client->sendRequest(iconPath);
 }
 
 QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
@@ -182,11 +178,29 @@ QIcon LibrariesWidget::convertSvgToIcon(QString svgString)
     return QIcon(pixmap);
 }
 
-void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component& component)
+void LibrariesWidget::iconsFromJson(const nlohmann::json& jsonObj)
 {
-    component.model = QString::fromStdString(jsonObj["model"].get<std::string>());
-    component.thumb = QString::fromStdString(jsonObj["thumb"].get<std::string>());
-    component.desc = QString::fromStdString(jsonObj["desc"].get<std::string>());
+    QString content;
+    if (jsonObj.contains("files") && jsonObj["files"].is_array()) {
+        for (const auto& file : jsonObj["files"]) {
+            foreach(const auto& catalog, *catalogs)
+            {
+                if (catalog.thumb == QString::fromStdString(jsonObj["thumb"].get<std::string>())) {
+                    currentCatalog = catalog;
+                    content = QString::fromStdString(jsonObj["content"].get<std::string>());
+                    if (content != "")
+                    {
+                        currentIcon = convertSvgToIcon(content);
+                    }
+                    else
+                    {
+                        currentIcon = defaultFolder;
+                    }
+                    currentCatalog.item->setIcon(currentIcon);
+                }
+            }
+        }
+    }
 }
 
 void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem)
@@ -195,8 +209,6 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
     catalog.thumb = QString::fromStdString(jsonObj["thumb"].get<std::string>());
 
     catalog.item = new QStandardItem(catalog.name);
-
-
 
     if (parentItem) {
         parentItem->appendRow(catalog.item);
@@ -222,6 +234,13 @@ void LibrariesWidget::CatalogFromJson(const nlohmann::json& jsonObj, Catalog& ca
     catalogs->push_back(catalog);
 }
 
+void LibrariesWidget::ComponentFromJson(const nlohmann::json& jsonObj, Component& component)
+{
+    component.model = QString::fromStdString(jsonObj["model"].get<std::string>());
+    component.thumb = QString::fromStdString(jsonObj["thumb"].get<std::string>());
+    component.desc = QString::fromStdString(jsonObj["desc"].get<std::string>());
+}
+
 void LibrariesWidget::handleError(const QString& errorString)
 {
     QMessageBox::warning(this, QStringLiteral(u"Ошибка при получении данных: "), errorString);
@@ -229,5 +248,5 @@ void LibrariesWidget::handleError(const QString& errorString)
 
 void LibrariesWidget::refreshButtonClicked()
 {
-    client->sendRequest();
+    client->sendRequest(currentPath);
 }

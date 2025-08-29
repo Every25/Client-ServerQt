@@ -17,13 +17,13 @@ public:
     Client(QObject* parent = nullptr);
     ~Client();
 
-    void sendRequest();
+    void sendRequest(QString path);
     QUrl url;
-    QString currentPath = "/Libraries";
     QUrlQuery query;
 
 signals:
-    void dataReceived(const nlohmann::json& jsonData);
+    void jsonReceived(const nlohmann::json& jsonData);
+    void iconReceived(const nlohmann::json& jsonObj);
     void errorOccurred(const QString& errorString);
 
 private:
