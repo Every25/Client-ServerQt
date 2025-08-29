@@ -12,7 +12,7 @@ void ComponentsTable::setupTable()
     setColumnCount(3);
 
     QStringList headers;
-    headers << "" << "Models" << "Description";
+    headers << "Symbol" << "Model" << "Description";
     setHorizontalHeaderLabels(headers);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -20,6 +20,7 @@ void ComponentsTable::setupTable()
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setAlternatingRowColors(true);
     setShowGrid(false);
+    verticalHeader()->setVisible(false);
 
     horizontalHeader()->setStretchLastSection(true);
     horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
