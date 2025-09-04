@@ -1,5 +1,5 @@
 {
-  "library": "Basic/Lumped Elements",
+  "library": "Basic",
   "name": "L",
   "model": "L",
   "view_model": true,
@@ -16,11 +16,23 @@
       "factor": "n",
       "unit": "H",
       "display": true
+    },
+    {
+      "name": "R",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "",
+      "unit": "Ohm",
+      "display": true
     }
   ],
   "schematic": {
     "netlist": {
-      "model": "ind"
+      "model": "inductor",
+      "params": {
+        "L": "l",
+        "R": "r"
+      }
     }
   },
   "layout": {

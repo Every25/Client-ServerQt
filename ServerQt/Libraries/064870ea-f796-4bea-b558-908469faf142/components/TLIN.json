@@ -1,0 +1,65 @@
+{
+  "library": "Basic",
+  "name": "TL",
+  "model": "TLIN",
+  "view_model": true,
+  "group": "PAR",
+  "pins": [
+    "P1",
+    "P2"
+  ],
+  "parameters": [
+    {
+      "name": "Z0",
+      "type": "Real",
+      "default": 250.0,
+      "factor": "1",
+      "unit": "Ohm",
+      "display": true
+    },
+    {
+      "name": "E",
+      "type": "Real",
+      "default": 9000.0,
+      "factor": "1",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "F",
+      "type": "Real",
+      "default": 100.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": true
+    },
+    {
+      "name": "alpha",
+      "type": "Real",
+      "default": 0,
+      "factor": "1",
+      "unit": "",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "tline",
+      "params": {
+        "Z0": "z0",
+        "E": "e",
+        "F": "f",
+        "alpha": "alpha"
+      }
+    }
+  },
+  "layout": {
+    "model": ""
+  },
+  "ugo": {
+    "model": "MLIN"
+  },
+  "veriloga": {
+    "model": "TLIN.va"
+  }
+}

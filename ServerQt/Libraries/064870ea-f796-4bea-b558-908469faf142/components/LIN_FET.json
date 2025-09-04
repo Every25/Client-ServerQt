@@ -1,0 +1,41 @@
+{
+  "library": "Basic",
+  "name": "LinFet",
+  "model": "LIN_FET",
+  "view_model": true,
+  "group": "SCS",
+  "pins": [
+    "P1",
+    "P2",
+    "P3"
+  ],
+  "parameters": [
+    {
+      "name": "UserModel",
+      "type": "String",
+      "default": "0_20G_lin_fet",
+      "display": true,
+      "readonly": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "transistor",
+      "params": {
+        "UserModel": "usermodel"
+      }
+    }
+  },
+  "layout": {
+    "model": ""
+  },
+  "ugo": {
+    "model": "FET"
+  },
+  "subnetlists": {
+    "model": "0_20G_lin_fet.scs"
+  },
+  "verilog": {
+    "model": ""
+  }
+}

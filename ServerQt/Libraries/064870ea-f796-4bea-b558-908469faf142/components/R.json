@@ -1,5 +1,5 @@
 {
-  "library": "Basic/Lumped Elements",
+  "library": "Basic",
   "name": "R",
   "model": "R",
   "view_model": true,
@@ -36,7 +36,12 @@
   ],
   "schematic": {
     "netlist": {
-      "mode": "res"
+      "model": "resistor",
+      "params": {
+        "R": "r",
+        "W": "w",
+        "L": "l"
+      }
     }
   },
   "layout": {

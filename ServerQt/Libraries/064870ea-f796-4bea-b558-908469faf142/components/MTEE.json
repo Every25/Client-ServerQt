@@ -1,6 +1,6 @@
 {
-  "library": "Basic/Microstrip/Junctions",
-  "name": "TEE",
+  "library": "Basic",
+  "name": "Tee",
   "model": "MTEE",
   "view_model": true,
   "group": "PAR",
@@ -17,25 +17,17 @@
       "display": true
     },
     {
-      "name": "W1",
+      "name": "W13",
       "type": "Real",
-      "default": 635.0,
+      "default": 25.0,
       "factor": "u",
       "unit": "m",
       "display": true
     },
     {
-      "name": "W2",
+      "name": "W24",
       "type": "Real",
-      "default": 635.0,
-      "factor": "u",
-      "unit": "m",
-      "display": true
-    },
-    {
-      "name": "W3",
-      "type": "Real",
-      "default": 1270.0,
+      "default": 25.0,
       "factor": "u",
       "unit": "m",
       "display": true
@@ -43,6 +35,12 @@
   ],
   "schematic": {
     "netlist": {
+      "model": "mtee",
+      "params": {
+        "Subst": "subst",
+        "W13": "w13",
+        "W24": "w24"
+      }
     }
   },
   "layout": {
@@ -52,6 +50,6 @@
     "model": "MTEE"
   },
   "veriloga": {
-    "model": ""
+    "model": "MTEE.va"
   }
 }

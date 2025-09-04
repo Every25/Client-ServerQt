@@ -1,5 +1,5 @@
 {
-  "library": "Basic/Microstrip/Lines",
+  "library": "Basic",
   "name": "TL",
   "model": "MLOC",
   "view_model": true,
@@ -17,37 +17,13 @@
     {
       "name": "W",
       "type": "Real",
-      "default": 635.0,
+      "default": 25.0,
       "factor": "u",
       "unit": "m",
       "display": true
     },
     {
-      "name": "L",
-      "type": "Real",
-      "default": 2540.0,
-      "factor": "u",
-      "unit": "m",
-      "display": true
-    },
-    {
-      "name": "Wall1",
-      "type": "Real",
-      "default": 2.54e+31,
-      "factor": "u",
-      "unit": "m",
-      "display": false
-    },
-    {
-      "name": "Wall2",
-      "type": "Real",
-      "default": 2.54e+31,
-      "factor": "u",
-      "unit": "m",
-      "display": false
-    },
-    {
-      "name": "Model",
+      "name": "DispModel",
       "type": "String",
       "default": "Kirschning",
       "display": false
@@ -55,6 +31,12 @@
   ],
   "schematic": {
     "netlist": {
+      "model": "mopen",
+      "params": {
+        "Subst": "subst",
+        "W": "w",
+        "DispModel": "dispmodel"
+      }
     }
   },
   "layout": {
@@ -64,5 +46,6 @@
     "model": "MLOC"
   },
   "veriloga": {
+    "model": "MOPEN.va"
   }
 }

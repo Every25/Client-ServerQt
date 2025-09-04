@@ -1,6 +1,6 @@
 {
-  "library": "Basic/Microstrip/Bends",
-  "name": "BN",
+  "library": "Basic",
+  "name": "Bend",
   "model": "MBEND",
   "view_model": true,
   "group": "PAR",
@@ -18,7 +18,7 @@
     {
       "name": "W",
       "type": "Real",
-      "default": 0.050,
+      "default": 25,
       "factor": "u",
       "unit": "m",
       "display": true
@@ -26,7 +26,11 @@
   ],
   "schematic": {
     "netlist": {
-        "model": ""
+      "model": "mbend",
+      "params": {
+        "Subst": "subst",
+        "W": "w"
+      }
     }
   },
   "layout": {
@@ -36,6 +40,6 @@
     "model": "MBEND"
   },
   "veriloga": {
-    "model": "MBEND"
+    "model": "MBEND.va"
   }
 }

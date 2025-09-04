@@ -1,0 +1,56 @@
+{
+  "library": "Basic",
+  "name": "Noise",
+  "model": "NOISE",
+  "group": "SIM",
+  "parameters": [
+    {
+      "name": "Start",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": true
+    },
+    {
+      "name": "Stop",
+      "type": "Real",
+      "default": 10.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": true
+    },
+    {
+      "name": "Step",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": true
+    },
+    {
+      "name": "IProbe",
+      "type": "String",
+      "default": "Term1",
+      "display": true
+    },
+    {
+      "name": "OProbe",
+      "type": "String",
+      "default": "Term2",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "noise",
+      "params": {
+        "Start": "start",
+        "Stop": "stop",
+        "Step": "step",
+        "IProbe": "iprobe",
+        "OProbe": "oprobe"
+      }
+    }
+  }
+}

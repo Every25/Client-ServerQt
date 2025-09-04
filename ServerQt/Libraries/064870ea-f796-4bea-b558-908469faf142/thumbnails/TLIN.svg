@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="20mm" height="14mm"
+viewBox="0 0 205 146">
+<title>TLIN</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="44.56 55.23 67.90 55.23 67.90 41.00 137.44 41.00 137.44 55.23 160.78 55.23 137.44 55.23 137.44 69.46 67.90 69.46 67.90 55.23" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+<path fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="0" d=" M 80.31 98.81 L 80.33 79.34 73.74 79.34 73.74 76.56 89.42 76.56 89.42 79.34 82.84 79.34 82.82 98.81 Z M 92.22 98.81 L 92.24 76.56 94.75 76.56 94.73 96.03 104.77 96.03 104.76 98.81 Z M 107.90 98.81 L 107.91 76.56 110.42 76.56 110.40 98.81 Z M 115.42 98.81 L 115.44 76.56 118.12 76.56 128.59 94.19 128.60 76.56 131.11 76.56 131.09 98.81 128.41 98.81 117.94 81.18 117.93 98.81 Z" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 157 53 C 157 52 159 52 159 52 L 163 52 L 163 52 C 164 52 164 53 164 53 L 164 57 L 164 57 C 164 59 163 59 163 59 L 159 59 L 159 59 C 157 59 157 57 157 57 L 157 53 Z" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 41 53 C 41 52 43 52 43 52 L 46 52 L 46 52 C 48 52 48 53 48 53 L 48 57 L 48 57 C 48 59 46 59 46 59 L 43 59 L 43 59 C 41 59 41 57 41 57 L 41 53 Z" />
+<polyline points="56.20 50.68 51.49 59.71" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+</svg>

@@ -1,6 +1,6 @@
 {
-  "library": "Basic/Ports",
-  "name": "TERM",
+  "library": "Basic",
+  "name": "Term",
   "model": "TERM",
   "view_model": true,
   "group": "STD",
@@ -28,7 +28,7 @@
     {
       "name": "Vdc",
       "type": "Real",
-      "default": "",
+      "default": 0.0,
       "factor": "",
       "unit": "V",
       "display": false
@@ -36,6 +36,11 @@
   ],
   "schematic": {
     "netlist": {
+      "model": "0 port",
+      "params": {
+        "Num": "num",
+        "Z": "r"
+      }
     }
   },
   "layout": {

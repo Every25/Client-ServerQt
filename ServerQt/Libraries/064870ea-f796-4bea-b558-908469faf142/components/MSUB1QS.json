@@ -1,0 +1,97 @@
+{
+  "library": "Basic",
+  "name": "MSub",
+  "model": "MSUB1QS",
+  "view_model": true,
+  "group": "SUB",
+  "parameters": [
+    {
+      "name": "T",
+      "type": "Real",
+      "default": 2.0,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "H",
+      "type": "Real",
+      "default": 100.0,
+      "factor": "u",
+      "unit": "m",
+      "display": true
+    },
+    {
+      "name": "Er0",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "Mur0",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "TanD0",
+      "type": "Real",
+      "default": 0,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "Er1",
+      "type": "Real",
+      "default": 12.6,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "Mur1",
+      "type": "Real",
+      "default": 1.0001,
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "TanD1",
+      "type": "Real",
+      "default": 0.003,
+      "factor": "",
+      "unit": "",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "subst",
+      "params": {
+        "T": "t",
+        "H": "h",
+        "Er0": "er0",
+        "Mur0": "mur0",
+        "TanD0": "tand0",
+        "Er1": "er1",
+        "Mur1": "mur1",
+        "TanD1": "tand1"
+      }
+    }
+  },
+  "layout": {
+    "model": ""
+  },
+  "ugo": {
+    "model": "MSUB"
+  },
+  "veriloga": {
+    "model": ""
+  }
+}

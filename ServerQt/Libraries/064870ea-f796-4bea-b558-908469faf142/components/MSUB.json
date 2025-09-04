@@ -1,6 +1,6 @@
 {
-  "library": "Basic/Substrates",
-  "name": "SUB",
+  "library": "Basic",
+  "name": "MSub",
   "model": "MSUB",
   "view_model": true,
   "group": "SUB",
@@ -8,31 +8,39 @@
     {
       "name": "H",
       "type": "Real",
-      "default": 1.0,
-      "factor": "m",
+      "default": 254.0,
+      "factor": "u",
       "unit": "m",
       "display": true
     },
     {
       "name": "Er",
       "type": "Real",
-      "default": 9.8,
+      "default": 9.6,
       "factor": "",
       "unit": "",
       "display": true
     },
     {
-      "name": "Rho",
+      "name": "Mur",
       "type": "Real",
-      "default": 1.0E-50,
+      "default": 1,
       "factor": "",
-      "unit": "Ohm/m",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "Cond",
+      "type": "Real",
+      "default": 1.0E+50,
+      "factor": "",
+      "unit": "",
       "display": true
     },
     {
       "name": "Hu",
       "type": "Real",
-      "default": 1.00000054E+41,
+      "default": 1.00000054e+41,
       "factor": "u",
       "unit": "m",
       "display": true
@@ -40,7 +48,7 @@
     {
       "name": "T",
       "type": "Real",
-      "default": 35,
+      "default": 0,
       "factor": "u",
       "unit": "m",
       "display": true
@@ -48,17 +56,33 @@
     {
       "name": "TanD",
       "type": "Real",
-      "default": 2E-04,
+      "default": 0,
       "factor": "",
       "unit": "",
       "display": true
     },
     {
-      "name": "D",
+      "name": "Rough",
       "type": "Real",
-      "default": 0.15E-06,
+      "default": 0,
       "factor": "u",
       "unit": "m",
+      "display": true
+    },
+    {
+      "name": "Bbase",
+      "type": "Real",
+      "default": "",
+      "factor": "",
+      "unit": "",
+      "display": true
+    },
+    {
+      "name": "Dpeaks",
+      "type": "Real",
+      "default": "",
+      "factor": "",
+      "unit": "",
       "display": true
     },
     {
@@ -142,6 +166,19 @@
   ],
   "schematic": {
     "netlist": {
+      "model": "subst",
+      "params": {
+        "H": "h",
+        "Er": "er",
+        "Mur": "mur",
+        "Cond": "cond",
+        "Hu": "hu",
+        "T": "t",
+        "TanD": "tand",
+        "Rough": "rough",
+        "Bbase": "bbase",
+        "Dpeaks": "dpeaks"
+      }
     }
   },
   "layout": {

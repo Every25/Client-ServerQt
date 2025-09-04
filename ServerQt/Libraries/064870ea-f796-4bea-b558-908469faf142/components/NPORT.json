@@ -1,0 +1,30 @@
+{
+  "library": "Basic",
+  "name": "NPort",
+  "model": "NPORT",
+  "view_model": true,
+  "group": "SNP",
+  "pins": [],
+  "parameters": [
+    {
+      "name": "DataFile",
+      "type": "String",
+      "default": "file_name.sNp",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "nport",
+      "params": {
+        "DataFile": "dataFile"
+      }
+    }
+  },
+  "layout": {
+    "model": ""
+  },
+  "ugo": {
+    "model": ""
+  }
+}

@@ -3,6 +3,7 @@
   "components_location": "components",
   "layouts_location": "layouts",
   "sparam_location": "sparam",
+  "subnetlists_location": "subnetlists",
   "symbols_location": "symbols",
   "thumbnails_location": "thumbnails",
   "ugos_location": "ugos",
@@ -40,6 +41,11 @@
           "catalogs": [],
           "components": [
             {
+              "model": "BEND",
+              "thumb": "BEND",
+              "desc": "Bend"
+            },
+            {
               "model": "MBEND",
               "thumb": "MBEND",
               "desc": "Microstrip Bend"
@@ -52,8 +58,8 @@
           "catalogs": [],
           "components": [
             {
-              "model": "MCROSS",
-              "thumb": "MCROSS",
+              "model": "MCROS",
+              "thumb": "MCROS",
               "desc": "Microstrip Cross-Junction"
             },
             {
@@ -89,8 +95,68 @@
               "desc": "Microstrip Step in Width"
             }
           ]
+        },
+        {
+          "name": "Ideal",
+          "thumb": "microstrip_lines",
+          "catalogs": [],
+          "components": [
+            {
+              "model": "TLIN",
+              "thumb": "TLIN",
+              "desc": "Ideal Transmission Line"
+            }
+          ]
+        },
+        {
+          "name": "Quasi-static Models",
+          "thumb": "quasistatic_models",
+          "catalogs": [],
+          "components": [
+            {
+              "model": "MLEFQS",
+              "thumb": "MLEFQS",
+              "desc": "Microstrip Line Open-End Effect"
+            },
+            {
+              "model": "MLINQS",
+              "thumb": "MLINQS",
+              "desc": "Microstrip Line"
+            },
+            {
+              "model": "MLOCQS",
+              "thumb": "MLOCQS",
+              "desc": "Microstrip Open-Circuited Stub"
+            },
+            {
+              "model": "MOPENQS",
+              "thumb": "MOPENQS",
+              "desc": "Microstrip Open-Circuited Stub With Edge Effect"
+            },
+            {
+              "model": "MSTEPQS",
+              "thumb": "MSTEPQS",
+              "desc": "Microstrip Step in Width"
+            },
+            {
+              "model": "MCROSQS",
+              "thumb": "MCROSQS",
+              "desc": "Microstrip Cross-Junction"
+            },
+            {
+              "model": "MTEEQS",
+              "thumb": "MTEEQS",
+              "desc": "Microstrip T-Junction"
+            },
+            {
+              "model": "MBENDQS",
+              "thumb": "MBENDQS",
+              "desc": "Microstrip Bend"
+            }
+          ]
         }
-      ]
+      ],
+      "components": []
     },
     {
       "name": "Ports",
@@ -101,11 +167,6 @@
           "model": "TERM",
           "thumb": "TERM",
           "desc": "Port Impedance Termination for S-Parameters"
-        },
-        {
-          "model": "TERMG",
-          "thumb": "TERMG",
-          "desc": "Port Impedance Termination for S-Parameters with Grounded Reference"
         }
       ]
     },
@@ -115,19 +176,9 @@
       "catalogs": [],
       "components": [
         {
-          "model": "V_AC",
-          "thumb": "V_AC",
-          "desc": "AC Voltage Source"
-        },
-        {
           "model": "V_DC",
           "thumb": "V_DC",
           "desc": "DC Voltage Source"
-        },
-        {
-          "model": "V_PULSE",
-          "thumb": "V_PULSE",
-          "desc": "Voltage Source with Linear Edge Shape"
         }
       ]
     },
@@ -140,26 +191,72 @@
           "model": "MSUB",
           "thumb": "MSUB",
           "desc": "Microstrip Substrate"
+        },
+        {
+          "model": "MSUB1QS",
+          "thumb": "MSUBQS",
+          "desc": "Microstrip Substrate for Quasi-static Models"
         }
       ]
     },
     {
       "name": "General",
-      "thumb": "",
+      "thumb": "general_elements",
       "catalogs": [
         {
-          "name": "Data Item",
-          "thumb": "SNP",
+          "name": "User model items",
+          "thumb": "NPORT",
           "catalogs": [],
           "components": [
             {
-              "model": "SnP",
-              "thumb": "snp",
+              "model": "NPORT",
+              "thumb": "NPORT",
               "desc": "Dynamic N-Port S-perameter File"
             }
           ]
         }
+      ],
+      "components": []
+    },
+    {
+      "name": "Field-Effect Transistors",
+      "thumb": "field_transistors",
+      "catalogs": [],
+      "components": [
+        {
+          "model": "ANGELOV_FET",
+          "thumb": "ANG_FET",
+          "desc": "Angelov Nonlinear GaAs FET"
+        },
+        {
+          "model": "LIN_FET",
+          "thumb": "LIN_FET",
+          "desc": "Linear Field-Effect Transistor (0-20G)"
+        }
+      ]
+    },
+    {
+      "name": "Simulations",
+      "thumb": "simulations",
+      "catalogs": [],
+      "components": [
+        {
+          "model": "S_PARAM",
+          "thumb": "SP",
+          "desc": "S-parameter Simulation"
+        },
+        {
+          "model": "NOISE",
+          "thumb": "NOISE",
+          "desc": "Noise Simulation"
+        },
+        {
+          "model": "DC_SWEEP",
+          "thumb": "DC",
+          "desc": "DC Simulation"
+        }
       ]
     }
-  ]
+  ],
+  "components": []
 }

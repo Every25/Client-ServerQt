@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="19mm" height="20mm"
+viewBox="0 0 191 205">
+<title>LIN_FET</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<polyline points="57.34 84.56 77.34 84.56 77.34 64.56 77.34 104.56" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+<polyline points="87.34 54.56 87.34 114.56" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+<polyline points="87.34 84.56 117.34 84.56 117.34 124.56" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+<polyline points="97.54 81.86 87.34 84.56 97.54 87.26" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+<polyline points="87.34 64.56 117.34 64.56 117.34 44.56" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+<polyline points="87.34 104.56 117.34 104.56" fill="none" stroke="rgb(0,0,255)" stroke-width="2" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 54 83 C 54 81 56 81 56 81 L 59 81 L 59 81 C 61 81 61 83 61 83 L 61 86 L 61 86 C 61 88 59 88 59 88 L 56 88 L 56 88 C 54 88 54 86 54 86 L 54 83 Z" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 114 43 C 114 41 116 41 116 41 L 119 41 L 119 41 C 121 41 121 43 121 43 L 121 46 L 121 46 C 121 48 119 48 119 48 L 116 48 L 116 48 C 114 48 114 46 114 46 L 114 43 Z" />
+<path fill="rgb(255,0,0)" stroke="rgb(255,0,0)" stroke-width="2" d=" M 114 123 C 114 121 116 121 116 121 L 119 121 L 119 121 C 121 121 121 123 121 123 L 121 126 L 121 126 C 121 128 119 128 119 128 L 116 128 L 116 128 C 114 128 114 126 114 126 L 114 123 Z" />
+<path fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="0" d=" M 42.19 157.85 L 42.21 135.60 44.72 135.60 44.71 155.07 54.74 155.07 54.73 157.85 Z M 57.87 157.85 L 57.89 135.60 60.40 135.60 60.38 157.85 Z M 65.39 157.85 L 65.41 135.60 68.10 135.60 78.56 153.23 78.58 135.60 81.09 135.60 81.07 157.85 78.38 157.85 67.91 140.22 67.90 157.85 Z M 82.94 164.11 L 82.94 161.33 99.24 161.33 99.24 164.11 Z M 100.82 157.85 L 100.84 135.60 114.32 135.60 114.32 138.38 103.34 138.38 103.33 144.99 112.74 144.99 112.74 147.77 103.33 147.77 103.32 157.85 Z M 117.74 157.85 L 117.76 135.60 132.18 135.60 132.18 138.38 120.27 138.38 120.26 144.99 131.55 144.99 131.55 147.77 120.26 147.77 120.26 155.07 132.48 155.07 132.48 157.85 Z M 141.26 157.85 L 141.28 138.38 134.69 138.38 134.69 135.60 150.37 135.60 150.37 138.38 143.78 138.38 143.76 157.85 Z" />
+</svg>

@@ -1,6 +1,6 @@
 {
-  "library": "Basic/Sources",
-  "name": "SRC",
+  "library": "Basic",
+  "name": "Src",
   "model": "V_DC",
   "view_model": true,
   "group": "STD",
@@ -10,24 +10,27 @@
   ],
   "parameters": [
     {
+      "name": "Type",
+      "type": "String",
+      "default": "dc",
+      "display": true
+    },
+    {
       "name": "Vdc",
       "type": "Real",
       "default": 1.0,
       "factor": "",
       "unit": "V",
       "display": true
-    },
-    {
-      "name": "Vac",
-      "type": "Real",
-      "default": "",
-      "factor": "",
-      "unit": "A",
-      "display": false
     }
   ],
   "schematic": {
     "netlist": {
+      "model": "vsource",
+      "params": {
+        "Type": "type",
+        "Vdc": "dc"
+      }
     }
   },
   "layout": {

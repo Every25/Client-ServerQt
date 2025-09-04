@@ -1,6 +1,6 @@
 {
-  "library": "Basic/Microstrip/Lines",
-  "name": "STEP",
+  "library": "Basic",
+  "name": "Step",
   "model": "MSTEP",
   "view_model": true,
   "group": "PAR",
@@ -18,7 +18,7 @@
     {
       "name": "W1",
       "type": "Real",
-      "default": 635.0,
+      "default": 25.0,
       "factor": "u",
       "unit": "m",
       "display": true
@@ -26,7 +26,7 @@
     {
       "name": "W2",
       "type": "Real",
-      "default": 1270.0,
+      "default": 50.0,
       "factor": "u",
       "unit": "m",
       "display": true
@@ -34,6 +34,12 @@
   ],
   "schematic": {
     "netlist": {
+      "model": "mstep",
+      "params": {
+        "Subst": "subst",
+        "W1": "w1",
+        "W2": "w2"
+      }
     }
   },
   "layout": {
@@ -42,7 +48,7 @@
   "ugo": {
     "model": "MSTEP"
   },
-  "veriloga": {
-    "model": ""
+  "verilog": {
+    "model": "MSTEP.va"
   }
 }

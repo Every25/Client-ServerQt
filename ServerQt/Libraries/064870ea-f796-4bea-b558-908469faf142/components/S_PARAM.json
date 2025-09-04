@@ -1,0 +1,42 @@
+{
+  "library": "Basic",
+  "name": "SP",
+  "model": "S_PARAM",
+  "group": "SIM",
+  "parameters": [
+    {
+      "name": "Start",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": true
+    },
+    {
+      "name": "Stop",
+      "type": "Real",
+      "default": 10.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": true
+    },
+    {
+      "name": "Step",
+      "type": "Real",
+      "default": 1.0,
+      "factor": "G",
+      "unit": "Hz",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "sparam",
+      "params": {
+        "Start": "start",
+        "Stop": "stop",
+        "Step": "step"
+      }
+    }
+  }
+}

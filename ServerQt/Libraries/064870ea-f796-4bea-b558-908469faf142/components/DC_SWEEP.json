@@ -1,0 +1,63 @@
+{
+  "library": "Basic",
+  "name": "DC",
+  "model": "DC_Sweep",
+  "group": "SIM",
+  "parameters": [
+    {
+      "name": "Start",
+      "type": "Real",
+      "default": 0,
+      "factor": "1",
+      "unit": "V",
+      "display": true
+    },
+    {
+      "name": "Stop",
+      "type": "Real",
+      "default": 10.0,
+      "factor": "1",
+      "unit": "V",
+      "display": true
+    },
+    {
+      "name": "Step",
+      "type": "Real",
+      "default": 0.1,
+      "factor": "1",
+      "unit": "V",
+      "display": true
+    },
+    {
+      "name": "Dev",
+      "type": "String",
+      "default": "Src1",
+      "display": true
+    },
+    {
+      "name": "Param",
+      "type": "String",
+      "default": "",
+      "display": true
+    },
+    {
+      "name": "Model",
+      "type": "String",
+      "default": "",
+      "display": true
+    }
+  ],
+  "schematic": {
+    "netlist": {
+      "model": "dc_sweep",
+      "params": {
+        "Start": "start",
+        "Stop": "stop",
+        "Step": "step",
+        "Dev": "dev",
+        "Param": "param",
+        "Model": "model"
+      }
+    }
+  }
+}
