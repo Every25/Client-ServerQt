@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
 
-    QApplication::setStyle(QStyleFactory::create("Basic"));
+    QApplication::setStyle(QStyleFactory::create("Windows"));
     QApplication app(argc, argv);
     LibrariesWidget window;
     window.setWindowTitle(QStringLiteral(u"Библиотеки элементов"));
