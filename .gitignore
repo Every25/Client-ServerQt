@@ -365,4 +365,4 @@ FodyWeavers.xsd
 /ServerQt/build
 
 # Custom directories
-/libraries/
+/Libraries/
