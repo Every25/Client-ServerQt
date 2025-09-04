@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /ClientQt/build
 /ServerQt/build
+
+# Custom directories
+/libraries/
