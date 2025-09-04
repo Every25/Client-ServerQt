@@ -32,13 +32,6 @@ add_custom_target(copy_icons ALL
     COMMENT "Copying icons directory to output directory"
 )
 
-add_custom_target(copy_libraries ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${LIBRARIES_SOURCE_DIR}
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>/Libraries
-    COMMENT "Copying icons directory to output directory"
-)
-
 #add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
