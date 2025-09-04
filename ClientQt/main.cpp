@@ -1,9 +1,12 @@
 ﻿#include "LibrariesWidget.h"
 #include "Client.h"
 #include <QtWidgets/QApplication>
+#include <QStyleFactory>
 
 int main(int argc, char *argv[])
 {
+
+    QApplication::setStyle(QStyleFactory::create("Basic"));
     QApplication app(argc, argv);
     LibrariesWidget window;
     window.setWindowTitle(QStringLiteral(u"Библиотеки элементов"));
