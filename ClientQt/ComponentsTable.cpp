@@ -1,5 +1,4 @@
 ﻿#include "ComponentsTable.h"
-#include "LibrariesWidget.h"
 
 ComponentsTable::ComponentsTable(QWidget* parent)
     : QTableWidget(parent)
