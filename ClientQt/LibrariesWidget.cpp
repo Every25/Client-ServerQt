@@ -5,17 +5,42 @@
 #include <QString>
 #include <QMessageBox>
 #include <QSplitter>
+#include <QFileInfo>
 
-
-QString ip = "127.0.0.1";
-//QString ip = "10.0.1.118";
-
-int port = 8080;
 QIcon defaultFolder = QIcon("icons/folder.svg");
 QSize iconSize(64, 64);
 QIcon currentIcon;
 Library* currentLibrary = nullptr;
 Catalog* currentCatalog = nullptr;
+
+QUrl LibrariesWidget::GetUrl(QString currentPath) {
+    QFile jsonFile(currentPath);
+    if (!jsonFile.open(QIODevice::ReadOnly)) {
+        qWarning() << "Не удалось открыть файл:" << currentPath;
+        return QUrl();
+    }
+
+    QByteArray jsonContent = jsonFile.readAll();
+    jsonFile.close();
+
+    try {
+        std::string jsonStr = jsonContent.toStdString();
+        nlohmann::json j = nlohmann::json::parse(jsonStr);
+
+        QString ip = QString::fromStdString(j["config"]["ip"].get<std::string>());
+        QString port = QString::fromStdString(j["config"]["port"].get<std::string>());
+
+        return QUrl("http://" + ip + ":" + port);
+    }
+    catch (const nlohmann::json::parse_error& e) {
+        qWarning() << "Ошибка парсинга JSON:" << e.what();
+        return QUrl();
+    }
+    catch (const std::exception& e) {
+        qWarning() << "Ошибка:" << e.what();
+        return QUrl();
+    }
+}
 
 LibrariesWidget::LibrariesWidget(QWidget* parent)
     : QWidget(parent)
@@ -55,7 +80,7 @@ LibrariesWidget::LibrariesWidget(QWidget* parent)
     
     // Создание клиента
     client = new Client(this);
-    client->url = QUrl("http://" + ip + ":" + QString::number(port));
+    client->url = GetUrl("./configuration/config.json");
 
     //привязка сигналов
     connect(treeView, &QTreeView::clicked, this, &LibrariesWidget::RequestWithSelectedItem);

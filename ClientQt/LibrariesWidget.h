@@ -13,6 +13,7 @@
 #include <QStandardItem>
 #include <nlohmann/json.hpp>
 #include <QList>
+#include <QString>
 #include "ComponentsTable.h"
 
 class QTextEdit;
@@ -42,6 +43,7 @@ private:
     void addLibraryToModel(const nlohmann::json& jsonObj, QStandardItem* parentItem);
     void ComponentFromJson(const nlohmann::json& j, Component& component);
     void CatalogFromJson(const nlohmann::json& jsonObj, Catalog& catalog, QStandardItem* parentItem);
+    QUrl GetUrl(QString path);
 
 public slots:
     void iconsFromJson(const nlohmann::json& jsonObj);
